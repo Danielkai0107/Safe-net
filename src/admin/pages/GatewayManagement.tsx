@@ -21,6 +21,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import BlockIcon from '@mui/icons-material/Block';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { FileText } from 'lucide-react';
 import { Modal } from '../../components/Modal';
 import { Table } from '../../components/Table';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
@@ -429,9 +430,10 @@ export const GatewayManagement: React.FC = () => {
             </TextField>
 
             {formData.tenantId && !editingGateway && (
-              <Box sx={{ p: 2, bgcolor: 'info.50', borderRadius: 1 }}>
+              <Box sx={{ p: 2, bgcolor: 'info.50', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <FileText size={16} color="#0288d1" />
                 <Typography variant="body2" color="info.main">
-                  📋 預覽接收點編號：{generateGatewayNumber(formData.tenantId, gateways)}
+                  預覽接收點編號：{generateGatewayNumber(formData.tenantId, gateways)}
                 </Typography>
               </Box>
             )}

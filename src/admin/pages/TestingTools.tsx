@@ -4,6 +4,7 @@ import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link } from "react-router-dom";
+import { TestTube, Radio, Smartphone } from 'lucide-react';
 import { HardwareSimulator } from "../components/HardwareSimulator";
 import { LineNotificationTester } from "../components/LineNotificationTester";
 
@@ -49,7 +50,10 @@ export const TestingTools: React.FC = () => {
           >
             返回主控台
           </Button>
-          <h1 className="testing-tools__title">🧪 測試工具</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <TestTube size={32} color="#1976d2" />
+            <h1 className="testing-tools__title">測試工具</h1>
+          </div>
           <p className="testing-tools__subtitle">
             硬體訊號模擬與 LINE 通知測試
           </p>
@@ -63,8 +67,22 @@ export const TestingTools: React.FC = () => {
             aria-label="testing tools tabs"
             variant="fullWidth"
           >
-            <Tab label="📡 硬體訊號模擬器" />
-            <Tab label="📱 LINE 通知測試" />
+            <Tab 
+              label={
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Radio size={18} />
+                  <span>硬體訊號模擬器</span>
+                </div>
+              } 
+            />
+            <Tab 
+              label={
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Smartphone size={18} />
+                  <span>LINE 通知測試</span>
+                </div>
+              } 
+            />
           </Tabs>
 
           <TabPanel value={currentTab} index={0}>

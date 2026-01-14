@@ -11,11 +11,15 @@ import {
   List,
   ListItem,
   ListItemText,
-  Chip,
 } from '@mui/material';
 import { checkFirebaseConfig } from '../../utils/firebaseCheck';
 import { auth } from '../../lib/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { 
+  Wrench, 
+  CheckCircle, 
+  XCircle
+} from 'lucide-react';
 
 export const FirebaseTest: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -32,7 +36,7 @@ export const FirebaseTest: React.FC = () => {
     try {
       // 測試 1: 檢查 Auth 物件
       if (!auth) {
-        setTestResult('❌ Firebase Auth 物件未初始化');
+        setTestResult('Firebase Auth 物件未初始化');
         setTestStatus('error');
         return;
       }
@@ -51,14 +55,14 @@ export const FirebaseTest: React.FC = () => {
 
       if (response.ok || response.status === 400) {
         // 400 是預期的，因為我們沒有提供有效的請求體
-        setTestResult(`✅ 成功連接到 Firebase Auth API\n\nAuth Domain: ${config.authDomain}\nProject ID: ${config.projectId}\n\n現在請在下方輸入您在 Firebase Console 創建的帳號來測試登入。`);
+        setTestResult(`成功連接到 Firebase Auth API\n\nAuth Domain: ${config.authDomain}\nProject ID: ${config.projectId}\n\n現在請在下方輸入您在 Firebase Console 創建的帳號來測試登入。`);
         setTestStatus('success');
       } else {
-        setTestResult(`⚠️ 連接到 Firebase Auth API 失敗\n狀態碼: ${response.status}\n請檢查網絡連接和 API Key`);
+        setTestResult(`連接到 Firebase Auth API 失敗\n狀態碼: ${response.status}\n請檢查網絡連接和 API Key`);
         setTestStatus('error');
       }
     } catch (error: any) {
-      setTestResult(`❌ 測試失敗: ${error.message}\n\n可能原因：\n1. 網絡連接問題\n2. Firebase API Key 不正確\n3. 防火牆或代理阻止連接`);
+      setTestResult(`測試失敗: ${error.message}\n\n可能原因：\n1. 網絡連接問題\n2. Firebase API Key 不正確\n3. 防火牆或代理阻止連接`);
       setTestStatus('error');
     }
   };
@@ -75,10 +79,10 @@ export const FirebaseTest: React.FC = () => {
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      setTestResult(`✅ 登入成功！\n\n用戶 ID: ${userCredential.user.uid}\n電子郵件: ${userCredential.user.email}\n\n登入功能正常！您可以前往 /login 頁面使用了。`);
+      setTestResult(`登入成功！\n\n用戶 ID: ${userCredential.user.uid}\n電子郵件: ${userCredential.user.email}\n\n登入功能正常！您可以前往 /login 頁面使用了。`);
       setTestStatus('success');
     } catch (error: any) {
-      let errorMessage = `❌ 登入失敗\n\n錯誤代碼: ${error.code}\n錯誤訊息: ${error.message}\n\n`;
+      let errorMessage = `登入失敗\n\n錯誤代碼: ${error.code}\n錯誤訊息: ${error.message}\n\n`;
 
       switch (error.code) {
         case 'auth/user-not-found':
@@ -94,7 +98,7 @@ export const FirebaseTest: React.FC = () => {
           errorMessage += '原因：網絡請求失敗\n解決方法：\n1. 檢查 Firebase Console → Authentication → Sign-in method 是否已啟用 Email/Password\n2. 檢查網絡連接\n3. 檢查 authDomain 配置是否正確';
           break;
         case 'auth/operation-not-allowed':
-          errorMessage += '⚠️⚠️⚠️ 重要！\n原因：Email/Password 登入方式未啟用\n解決方法：\n1. 前往 Firebase Console\n2. 點擊 Authentication\n3. 點擊 Sign-in method 標籤\n4. 點擊 Email/Password\n5. 啟用第一個開關（Email/Password）\n6. 點擊 Save';
+          errorMessage += '重要！\n原因：Email/Password 登入方式未啟用\n解決方法：\n1. 前往 Firebase Console\n2. 點擊 Authentication\n3. 點擊 Sign-in method 標籤\n4. 點擊 Email/Password\n5. 啟用第一個開關（Email/Password）\n6. 點擊 Save';
           break;
         default:
           errorMessage += '請查看上面的錯誤代碼並參考 FIREBASE_AUTH_TROUBLESHOOTING.md';
@@ -110,9 +114,12 @@ export const FirebaseTest: React.FC = () => {
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 4 }}>
       <Container maxWidth="md">
         <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h4" gutterBottom fontWeight={600}>
-            🔧 Firebase Authentication 診斷工具
-          </Typography>
+          <Box display="flex" alignItems="center" gap={1.5} mb={2}>
+            <Wrench size={32} color="#1976d2" />
+            <Typography variant="h4" fontWeight={600}>
+              Firebase Authentication 診斷工具
+            </Typography>
+          </Box>
           <Typography variant="body2" color="text.secondary" paragraph>
             此頁面可以幫助您診斷 Firebase Authentication 的配置問題
           </Typography>
@@ -122,7 +129,7 @@ export const FirebaseTest: React.FC = () => {
           {/* 配置檢查 */}
           <Box mb={4}>
             <Typography variant="h6" gutterBottom>
-              1️⃣ 環境變數配置
+              1. 環境變數配置
             </Typography>
             <List dense>
               {Object.entries(config).map(([key, value]) => (
@@ -134,11 +141,11 @@ export const FirebaseTest: React.FC = () => {
                       sx: { fontFamily: 'monospace', fontSize: '0.85rem' },
                     }}
                   />
-                  <Chip
-                    label={value && !value.includes('your_') ? '✅' : '❌'}
-                    size="small"
-                    color={value && !value.includes('your_') ? 'success' : 'error'}
-                  />
+                  {value && !value.includes('your_') ? (
+                    <CheckCircle size={20} color="#2e7d32" />
+                  ) : (
+                    <XCircle size={20} color="#d32f2f" />
+                  )}
                 </ListItem>
               ))}
             </List>
@@ -149,7 +156,7 @@ export const FirebaseTest: React.FC = () => {
           {/* 連接測試 */}
           <Box mb={4}>
             <Typography variant="h6" gutterBottom>
-              2️⃣ 測試 Firebase 連接
+              2. 測試 Firebase 連接
             </Typography>
             <Button variant="contained" onClick={testConnection} fullWidth>
               測試連接到 Firebase
@@ -161,7 +168,7 @@ export const FirebaseTest: React.FC = () => {
           {/* 登入測試 */}
           <Box mb={4}>
             <Typography variant="h6" gutterBottom>
-              3️⃣ 測試登入功能
+              3. 測試登入功能
             </Typography>
             <Typography variant="body2" color="text.secondary" paragraph>
               輸入您在 Firebase Console 創建的管理員帳號
@@ -207,9 +214,12 @@ export const FirebaseTest: React.FC = () => {
 
           {/* 快速檢查清單 */}
           <Box>
-            <Typography variant="h6" gutterBottom>
-              ✅ 檢查清單
-            </Typography>
+            <Box display="flex" alignItems="center" gap={1} mb={1}>
+              <CheckCircle size={24} color="#2e7d32" />
+              <Typography variant="h6">
+                檢查清單
+              </Typography>
+            </Box>
             <List dense>
               <ListItem>
                 <ListItemText

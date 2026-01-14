@@ -6,6 +6,13 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { 
+  AlertCircle, 
+  Clock, 
+  Battery, 
+  PhoneOff, 
+  AlertTriangle 
+} from 'lucide-react';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { StatusBadge } from '../../components/StatusBadge';
 import type { Alert as AlertType } from '../../types';
@@ -53,17 +60,18 @@ export const AlertList: React.FC = () => {
   };
 
   const getAlertIcon = (alertType: string) => {
+    const iconProps = { size: 24, strokeWidth: 2 };
     switch (alertType) {
       case 'emergency':
-        return '🚨';
+        return <AlertCircle {...iconProps} color="#d32f2f" />;
       case 'inactivity':
-        return '⏰';
+        return <Clock {...iconProps} color="#ed6c02" />;
       case 'low_battery':
-        return '🔋';
+        return <Battery {...iconProps} color="#ed6c02" />;
       case 'device_offline':
-        return '📴';
+        return <PhoneOff {...iconProps} color="#757575" />;
       default:
-        return '⚠️';
+        return <AlertTriangle {...iconProps} color="#ed6c02" />;
     }
   };
 
@@ -132,7 +140,9 @@ export const AlertList: React.FC = () => {
             >
               <div className="flex flex-between flex--align-start mb-3">
                 <div className="flex flex--align-center gap-3">
-                  <span className="text-2xl">{getAlertIcon(alert.alertType)}</span>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {getAlertIcon(alert.alertType)}
+                  </div>
                   <div>
                     <h3 className="h6 mb-1">{getAlertTypeText(alert.alertType)}</h3>
                     <p className="text-caption text-secondary">

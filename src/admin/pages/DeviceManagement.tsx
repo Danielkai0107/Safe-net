@@ -23,6 +23,7 @@ import BatteryAlertIcon from '@mui/icons-material/BatteryAlert';
 import Battery20Icon from '@mui/icons-material/Battery20';
 import Battery50Icon from '@mui/icons-material/Battery50';
 import Battery80Icon from '@mui/icons-material/Battery80';
+import { FileText } from 'lucide-react';
 import { Modal } from '../../components/Modal';
 import { Table } from '../../components/Table';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
@@ -447,9 +448,10 @@ export const DeviceManagement: React.FC = () => {
             </TextField>
 
             {formData.tenantId && !editingDevice && (
-              <Box sx={{ p: 2, bgcolor: 'info.50', borderRadius: 1 }}>
+              <Box sx={{ p: 2, bgcolor: 'info.50', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <FileText size={16} color="#0288d1" />
                 <Typography variant="body2" color="info.main">
-                  📋 預覽裝置編號：{generateDeviceNumber(formData.tenantId, devices)}
+                  預覽裝置編號：{generateDeviceNumber(formData.tenantId, devices)}
                 </Typography>
               </Box>
             )}

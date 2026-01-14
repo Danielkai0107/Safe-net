@@ -30,6 +30,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Chip from "@mui/material/Chip";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import { Building2, XCircle, AlertTriangle } from 'lucide-react';
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { ElderList } from "./ElderList";
 import { ElderDetail } from "./ElderDetail";
@@ -133,16 +134,16 @@ export const LiffApp: React.FC = () => {
 
           if (!tenantsSnapshot.empty) {
             matchedLiffId = tryLiffId;
-            console.log(`✅ Found tenant with LIFF ID: ${tryLiffId}`);
+            console.log(`Found tenant with LIFF ID: ${tryLiffId}`);
             break;
           } else {
-            console.log(`❌ No tenant found with LIFF ID: ${tryLiffId}`);
+            console.log(`No tenant found with LIFF ID: ${tryLiffId}`);
           }
         }
 
         if (!tenantsSnapshot || tenantsSnapshot.empty) {
           // Additional debugging: List all tenants to help diagnose
-          console.log("📋 Debugging: Fetching all active tenants...");
+          console.log("Debugging: Fetching all active tenants...");
           const allTenantsQuery = query(
             tenantsRef,
             where("subscription.status", "==", "active")
@@ -175,7 +176,7 @@ export const LiffApp: React.FC = () => {
         const tenantDoc = tenantsSnapshot.docs[0];
         const tenant = { id: tenantDoc.id, ...tenantDoc.data() } as Tenant;
 
-        console.log("✅ 找到社區:", tenant.name);
+        console.log("找到社區:", tenant.name);
         console.log("社區 ID:", tenant.id);
         console.log("匹配的 LIFF ID:", matchedLiffId);
         console.log("資料庫中的 LIFF ID:", tenant.lineConfig.liffId);
@@ -281,9 +282,12 @@ export const LiffApp: React.FC = () => {
         p={2}
       >
         <Paper elevation={3} sx={{ p: 4, maxWidth: 600 }}>
-          <Typography variant="h5" color="error" gutterBottom>
-            ❌ 錯誤
-          </Typography>
+          <Box display="flex" alignItems="center" gap={1} mb={2}>
+            <XCircle size={28} color="#d32f2f" />
+            <Typography variant="h5" color="error">
+              錯誤
+            </Typography>
+          </Box>
           <Typography
             variant="body1"
             color="text.primary"
@@ -315,9 +319,12 @@ export const LiffApp: React.FC = () => {
         p={2}
       >
         <Paper elevation={3} sx={{ p: 4, maxWidth: 400 }}>
-          <Typography variant="h5" color="warning.main" gutterBottom>
-            ⚠️ 無法載入
-          </Typography>
+          <Box display="flex" alignItems="center" gap={1} mb={2}>
+            <AlertTriangle size={28} color="#ed6c02" />
+            <Typography variant="h5" color="warning.main">
+              無法載入
+            </Typography>
+          </Box>
           <Typography variant="body1" color="text.primary">
             找不到社區設定
           </Typography>
@@ -339,14 +346,16 @@ export const LiffApp: React.FC = () => {
       {/* Header */}
       <AppBar position="sticky">
         <Toolbar>
-          <Typography
-            variant="h6"
-            component="div"
-            fontWeight={600}
-            sx={{ flexGrow: 1 }}
-          >
-            🏘️ {currentTenant?.name || "Community Guardian"}
-          </Typography>
+          <Box display="flex" alignItems="center" gap={1} sx={{ flexGrow: 1 }}>
+            <Building2 size={24} />
+            <Typography
+              variant="h6"
+              component="div"
+              fontWeight={600}
+            >
+              {currentTenant?.name || "Community Guardian"}
+            </Typography>
+          </Box>
           {isAdmin && (
             <Chip
               icon={<AdminPanelSettingsIcon />}

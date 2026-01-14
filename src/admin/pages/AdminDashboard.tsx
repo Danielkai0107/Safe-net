@@ -11,7 +11,6 @@ import RouterIcon from "@mui/icons-material/Router";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ScienceIcon from "@mui/icons-material/Science";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useAppStore } from "../../store/store";
 import { useAuth } from "../../contexts/AuthContext";
 

@@ -18,6 +18,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import LinkIcon from '@mui/icons-material/Link';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { 
+  AlertTriangle, 
+  Lock, 
+  Megaphone, 
+  User, 
+  Smartphone,
+  Info
+} from 'lucide-react';
 import { Modal } from '../../components/Modal';
 import { Table } from '../../components/Table';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
@@ -417,15 +425,21 @@ export const TenantManagement: React.FC = () => {
               LINE 設定
             </Typography>
             
-            <Typography variant="caption" color="warning.main" display="block" mb={2}>
-              ⚠️ 重要：根據 LINE 新政策，您需要建立兩個 Channels：
-              <br />1. <strong>Messaging API Channel</strong>（用於發送通知）
-              <br />2. <strong>LINE Login Channel</strong>（用於 LIFF App）
-            </Typography>
+            <Box display="flex" gap={1} alignItems="flex-start" mb={2}>
+              <AlertTriangle size={18} style={{ marginTop: 2, color: '#ed6c02', flexShrink: 0 }} />
+              <Typography variant="caption" color="warning.main">
+                <strong>重要：</strong>根據 LINE 新政策，您需要建立兩個 Channels：
+                <br />1. <strong>Messaging API Channel</strong>（用於發送通知）
+                <br />2. <strong>LINE Login Channel</strong>（用於 LIFF App）
+              </Typography>
+            </Box>
 
-            <Typography variant="body2" fontWeight={500} color="primary" mt={2} mb={1}>
-              📢 Messaging API Channel（用於發送通知）
-            </Typography>
+            <Box display="flex" gap={1} alignItems="center" mt={2} mb={1}>
+              <Megaphone size={18} color="#1976d2" />
+              <Typography variant="body2" fontWeight={500} color="primary">
+                Messaging API Channel（用於發送通知）
+              </Typography>
+            </Box>
 
             <TextField
               label="Channel Access Token"
@@ -455,9 +469,12 @@ export const TenantManagement: React.FC = () => {
               fullWidth
             />
 
-            <Typography variant="body2" fontWeight={500} color="primary" mt={3} mb={1}>
-              🔐 LINE Login Channel（用於 LIFF App）
-            </Typography>
+            <Box display="flex" gap={1} alignItems="center" mt={3} mb={1}>
+              <Lock size={18} color="#1976d2" />
+              <Typography variant="body2" fontWeight={500} color="primary">
+                LINE Login Channel（用於 LIFF App）
+              </Typography>
+            </Box>
 
             <TextField
               label="LIFF ID"
@@ -477,9 +494,12 @@ export const TenantManagement: React.FC = () => {
               授權管理員 LINE IDs（選填）
             </Typography>
             
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-              💡 提示：所有加入此 LINE OA 的用戶都會收到通知。此處可選填特定管理員 ID 以便在 LIFF 中進行權限控制。
-            </Typography>
+            <Box display="flex" gap={1} alignItems="flex-start" sx={{ mb: 1 }}>
+              <Info size={16} style={{ marginTop: 2, color: '#757575', flexShrink: 0 }} />
+              <Typography variant="body2" color="text.secondary">
+                提示：所有加入此 LINE OA 的用戶都會收到通知。此處可選填特定管理員 ID 以便在 LIFF 中進行權限控制。
+              </Typography>
+            </Box>
 
             <Box display="flex" gap={1}>
               <TextField
@@ -539,10 +559,9 @@ export const TenantManagement: React.FC = () => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontSize: '1.5rem',
                           }}
                         >
-                          👤
+                          <User size={28} color="#666" />
                         </Box>
                       )}
                       <Box sx={{ flex: 1 }}>
@@ -644,9 +663,12 @@ export const TenantManagement: React.FC = () => {
             </Box>
 
             <Box>
-              <Typography variant="subtitle2" color="primary" gutterBottom>
-                📱 使用說明
-              </Typography>
+              <Box display="flex" gap={1} alignItems="center" mb={1}>
+                <Smartphone size={18} color="#1976d2" />
+                <Typography variant="subtitle2" color="primary" fontWeight={600}>
+                  使用說明
+                </Typography>
+              </Box>
               <Typography variant="body2" color="text.secondary" component="div">
                 <ol style={{ paddingLeft: '1.5rem', margin: 0 }}>
                   <li>點擊下方「複製連結」按鈕</li>

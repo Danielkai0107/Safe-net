@@ -10,6 +10,16 @@ import Grid from "@mui/material/Grid";
 import Alert from "@mui/material/Alert";
 import Paper from "@mui/material/Paper";
 import SendIcon from "@mui/icons-material/Send";
+import { 
+  Smartphone, 
+  AlertCircle, 
+  Clock, 
+  Battery, 
+  PhoneOff, 
+  CheckCircle,
+  Info,
+  XCircle
+} from 'lucide-react';
 import { useAppStore } from "../../store/store";
 
 interface NotificationHistory {
@@ -80,7 +90,7 @@ export const LineNotificationTester: React.FC = () => {
         );
       }
 
-      console.log("📱 發送測試通知：", {
+      console.log("發送測試通知：", {
         tenantId: selectedTenant.id,
         elderId: selectedElder.id,
         alertType,
@@ -104,7 +114,7 @@ export const LineNotificationTester: React.FC = () => {
       if (data.success) {
         setResponseMessage({
           type: "success",
-          text: "✅ LINE 通知已發送！請檢查手機 LINE 是否收到通知。",
+          text: "LINE 通知已發送！請檢查手機 LINE 是否收到通知。",
         });
 
         const historyItem: NotificationHistory = {
@@ -121,7 +131,7 @@ export const LineNotificationTester: React.FC = () => {
       } else {
         setResponseMessage({
           type: "error",
-          text: `❌ 發送失敗：${data.error || data.message}`,
+          text: `發送失敗：${data.error || data.message}`,
         });
 
         const historyItem: NotificationHistory = {
@@ -137,10 +147,10 @@ export const LineNotificationTester: React.FC = () => {
         setHistory((prev) => [historyItem, ...prev].slice(0, 10));
       }
     } catch (error: any) {
-      console.error("❌ Error:", error);
+      console.error("Error:", error);
       setResponseMessage({
         type: "error",
-        text: `❌ 網路錯誤：${error.message}`,
+        text: `網路錯誤：${error.message}`,
       });
 
       const historyItem: NotificationHistory = {
@@ -160,19 +170,40 @@ export const LineNotificationTester: React.FC = () => {
   };
 
   const alertTypeLabels = {
-    emergency: "🚨 緊急求救",
-    inactivity: "⏱️ 長時間未活動",
-    low_battery: "🔋 裝置電量不足",
-    device_offline: "📵 裝置離線",
-    first_signal: "✅ 當日首次活動",
+    emergency: "緊急求救",
+    inactivity: "長時間未活動",
+    low_battery: "裝置電量不足",
+    device_offline: "裝置離線",
+    first_signal: "當日首次活動",
+  };
+
+  const getAlertIcon = (type: string) => {
+    const iconProps = { size: 16, style: { marginRight: '4px' } };
+    switch (type) {
+      case 'emergency':
+        return <AlertCircle {...iconProps} color="#d32f2f" />;
+      case 'inactivity':
+        return <Clock {...iconProps} color="#ed6c02" />;
+      case 'low_battery':
+        return <Battery {...iconProps} color="#ed6c02" />;
+      case 'device_offline':
+        return <PhoneOff {...iconProps} color="#757575" />;
+      case 'first_signal':
+        return <CheckCircle {...iconProps} color="#2e7d32" />;
+      default:
+        return null;
+    }
   };
 
   return (
     <Card elevation={2}>
       <CardContent>
-        <Typography variant="h5" gutterBottom fontWeight={600}>
-          📱 LINE 通知測試
-        </Typography>
+        <Box display="flex" alignItems="center" gap={1} mb={1}>
+          <Smartphone size={24} color="#1976d2" />
+          <Typography variant="h5" fontWeight={600}>
+            LINE 通知測試
+          </Typography>
+        </Box>
         <Typography variant="body2" color="text.secondary" gutterBottom>
           測試發送 LINE 通知給社區內的所有用戶
         </Typography>
@@ -230,7 +261,10 @@ export const LineNotificationTester: React.FC = () => {
               >
                 {Object.entries(alertTypeLabels).map(([key, label]) => (
                   <MenuItem key={key} value={key}>
-                    {label}
+                    <Box display="flex" alignItems="center">
+                      {getAlertIcon(key)}
+                      {label}
+                    </Box>
                   </MenuItem>
                 ))}
               </TextField>
@@ -244,7 +278,7 @@ export const LineNotificationTester: React.FC = () => {
                 disabled={!selectedTenant || !selectedElder || isSending}
                 fullWidth
               >
-                {isSending ? "發送中..." : "📱 發送測試通知"}
+                {isSending ? "發送中..." : "發送測試通知"}
               </Button>
 
               {responseMessage && (
@@ -260,9 +294,12 @@ export const LineNotificationTester: React.FC = () => {
             <Box display="flex" flexDirection="column" gap={2}>
               {/* Instructions */}
               <Paper variant="outlined" sx={{ p: 2 }}>
-                <Typography variant="subtitle2" gutterBottom fontWeight={600}>
-                  ℹ️ 測試說明
-                </Typography>
+                <Box display="flex" alignItems="center" gap={1} mb={1}>
+                  <Info size={18} color="#1976d2" />
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    測試說明
+                  </Typography>
+                </Box>
                 <Box display="flex" flexDirection="column" gap={1}>
                   <Typography variant="body2" color="text.secondary">
                     1. 選擇要測試的社區和長者
@@ -330,10 +367,16 @@ export const LineNotificationTester: React.FC = () => {
                         severity={item.success ? "success" : "error"}
                         sx={{ py: 0.5 }}
                       >
-                        <Typography variant="caption" fontWeight={600}>
-                          {item.success ? "✅" : "❌"} {item.elderName} -{" "}
-                          {alertTypeLabels[item.alertType as keyof typeof alertTypeLabels]}
-                        </Typography>
+                        <Box display="flex" alignItems="center">
+                          {item.success ? (
+                            <CheckCircle size={14} color="#2e7d32" style={{ marginRight: '4px' }} />
+                          ) : (
+                            <XCircle size={14} color="#d32f2f" style={{ marginRight: '4px' }} />
+                          )}
+                          <Typography variant="caption" fontWeight={600}>
+                            {item.elderName} - {alertTypeLabels[item.alertType as keyof typeof alertTypeLabels]}
+                          </Typography>
+                        </Box>
                         <Typography
                           variant="caption"
                           display="block"

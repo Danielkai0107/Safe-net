@@ -12,6 +12,16 @@ import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
 import Paper from '@mui/material/Paper';
 import SendIcon from '@mui/icons-material/Send';
+import { 
+  Wrench, 
+  Radio, 
+  AlertCircle, 
+  Heart, 
+  FileText, 
+  MapPin,
+  CheckCircle,
+  XCircle
+} from 'lucide-react';
 import { useAppStore } from '../../store/store';
 import type { ReceiveSignalRequest, ReceiveSignalResponse, Gateway } from '../../types';
 
@@ -117,12 +127,12 @@ export const HardwareSimulator: React.FC = () => {
       },
     };
 
-    console.log('🚨 模擬硬體訊號發送：', requestPayload);
+    console.log('模擬硬體訊號發送：', requestPayload);
 
     try {
       const apiEndpoint = import.meta.env.VITE_API_ENDPOINT || 'http://127.0.0.1:5001/safe-net-test/us-central1/receiveSignal';
-      console.log('📍 API Endpoint:', apiEndpoint);
-      console.log('📍 環境變數:', import.meta.env.VITE_API_ENDPOINT);
+      console.log('API Endpoint:', apiEndpoint);
+      console.log('環境變數:', import.meta.env.VITE_API_ENDPOINT);
 
       const response = await fetch(apiEndpoint, {
         method: 'POST',
@@ -172,7 +182,7 @@ export const HardwareSimulator: React.FC = () => {
         setHistory((prev) => [historyItem, ...prev].slice(0, 10));
       }
     } catch (error: any) {
-      console.error('❌ Error:', error);
+      console.error('Error:', error);
       setResponseMessage({
         type: 'error',
         text: `網路錯誤：${error.message}`,
@@ -198,9 +208,12 @@ export const HardwareSimulator: React.FC = () => {
   return (
     <Card elevation={2}>
       <CardContent>
-        <Typography variant="h5" gutterBottom fontWeight={600}>
-          🛠️ 硬體訊號模擬器
-        </Typography>
+        <Box display="flex" alignItems="center" gap={1} mb={1}>
+          <Wrench size={24} color="#1976d2" />
+          <Typography variant="h5" fontWeight={600}>
+            硬體訊號模擬器
+          </Typography>
+        </Box>
 
         <Grid container spacing={3} sx={{ mt: 1 }}>
           {/* Left Column: Form */}
@@ -251,10 +264,30 @@ export const HardwareSimulator: React.FC = () => {
                 onChange={(e) => setSignalType(e.target.value as any)}
                 fullWidth
               >
-                <MenuItem value="normal">📡 一般訊號</MenuItem>
-                <MenuItem value="emergency">🚨 緊急求救</MenuItem>
-                <MenuItem value="health">❤️ 健康數據</MenuItem>
-                <MenuItem value="other">📋 其他訊號</MenuItem>
+                <MenuItem value="normal">
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Radio size={16} />
+                    <span>一般訊號</span>
+                  </Box>
+                </MenuItem>
+                <MenuItem value="emergency">
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <AlertCircle size={16} color="#d32f2f" />
+                    <span>緊急求救</span>
+                  </Box>
+                </MenuItem>
+                <MenuItem value="health">
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Heart size={16} color="#d32f2f" />
+                    <span>健康數據</span>
+                  </Box>
+                </MenuItem>
+                <MenuItem value="other">
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <FileText size={16} />
+                    <span>其他訊號</span>
+                  </Box>
+                </MenuItem>
               </TextField>
 
               <TextField
@@ -272,8 +305,15 @@ export const HardwareSimulator: React.FC = () => {
                 <MenuItem value="">請選擇接收點...</MenuItem>
                 {gateways.map((gateway) => (
                   <MenuItem key={gateway.id} value={gateway.id}>
-                    {gateway.gatewayNumber} - {gateway.location}
-                    {gateway.isBoundary && ' 🚨 邊界點'}
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <span>{gateway.gatewayNumber} - {gateway.location}</span>
+                      {gateway.isBoundary && (
+                        <Box display="flex" alignItems="center" gap={0.5}>
+                          <AlertCircle size={14} color="#d32f2f" />
+                          <span style={{ color: '#d32f2f', fontSize: '0.875rem' }}>邊界點</span>
+                        </Box>
+                      )}
+                    </Box>
                   </MenuItem>
                 ))}
               </TextField>
@@ -306,7 +346,7 @@ export const HardwareSimulator: React.FC = () => {
                 disabled={!selectedTenant || !selectedElder || !selectedGateway || isSending}
                 fullWidth
               >
-                {isSending ? '發送中...' : '📡 發送訊號'}
+                {isSending ? '發送中...' : '發送訊號'}
               </Button>
 
               {responseMessage && (
@@ -349,9 +389,12 @@ export const HardwareSimulator: React.FC = () => {
                           <strong>接收點：</strong> {selectedGateway.location} ({selectedGateway.gatewayNumber})
                         </Typography>
                         {selectedGateway.isBoundary && (
-                          <Typography variant="body2" color="warning.main">
-                            🚨 此為邊界點，長輩經過會發送 LINE 通知
-                          </Typography>
+                          <Box display="flex" alignItems="center" gap={0.5}>
+                            <AlertCircle size={16} color="#ed6c02" />
+                            <Typography variant="body2" color="warning.main">
+                              此為邊界點，長輩經過會發送 LINE 通知
+                            </Typography>
+                          </Box>
                         )}
                       </>
                     )}
@@ -372,16 +415,26 @@ export const HardwareSimulator: React.FC = () => {
                   <Box display="flex" flexDirection="column" gap={1} mt={1} maxHeight={400} overflow="auto">
                     {history.map((item) => (
                       <Alert key={item.id} severity={item.success ? 'success' : 'error'} sx={{ py: 0.5 }}>
-                        <Typography variant="caption" fontWeight={600}>
-                          {item.success ? '✅' : '❌'} {item.elderName} - {item.signalType}
-                        </Typography>
+                        <Box display="flex" alignItems="center" gap={0.5}>
+                          {item.success ? (
+                            <CheckCircle size={14} color="#2e7d32" />
+                          ) : (
+                            <XCircle size={14} color="#d32f2f" />
+                          )}
+                          <Typography variant="caption" fontWeight={600}>
+                            {item.elderName} - {item.signalType}
+                          </Typography>
+                        </Box>
                         <Typography variant="caption" display="block" color="text.secondary">
                           {new Date(item.timestamp).toLocaleString('zh-TW')}
                         </Typography>
                         {item.gatewayLocation && (
-                          <Typography variant="caption" display="block" color="text.secondary">
-                            📍 {item.gatewayLocation}
-                          </Typography>
+                          <Box display="flex" alignItems="center" gap={0.5}>
+                            <MapPin size={12} color="#757575" />
+                            <Typography variant="caption" color="text.secondary">
+                              {item.gatewayLocation}
+                            </Typography>
+                          </Box>
                         )}
                         <Typography variant="caption" display="block">
                           {item.message}
