@@ -1,0 +1,28 @@
+@use '../../shared/abstracts/variables' as *;
+@use '../../shared/abstracts/mixins' as *;
+
+// ============================================
+// Hardware Simulator Component
+// ============================================
+
+.hardware-simulator {
+  padding: $spacing-6;
+
+  &__controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-4;
+    margin-bottom: $spacing-6;
+  }
+
+  &__output {
+    background: $color-gray-900;
+    color: $color-success-light;
+    padding: $spacing-4;
+    border-radius: $radius-lg;
+    font-family: $font-family-monospace;
+    font-size: $font-size-sm;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+}

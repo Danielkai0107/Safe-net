@@ -1,0 +1,52 @@
+@use '../../shared/abstracts/variables' as *;
+@use '../../shared/abstracts/mixins' as *;
+
+// ============================================
+// LIFF Elder Card Component
+// ============================================
+
+// Additional LIFF-specific elder card styles
+.liff-elder-card {
+  background: $color-white;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+  cursor: pointer;
+  @include transition(box-shadow, transform);
+
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+  }
+
+  &__header {
+    background: linear-gradient(135deg, $color-primary-light 0%, $color-primary 100%);
+    color: $color-white;
+    padding: $spacing-4;
+  }
+
+  &__name {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    margin-bottom: $spacing-1;
+  }
+
+  &__info {
+    font-size: $font-size-sm;
+    opacity: 0.9;
+  }
+
+  &__content {
+    padding: $spacing-4;
+  }
+
+  &__status-row {
+    @include flex-between;
+    margin-bottom: $spacing-3;
+  }
+
+  &__last-seen {
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+  }
+}

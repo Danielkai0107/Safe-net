@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
@@ -109,7 +106,6 @@ export const ElderList: React.FC = () => {
       return;
     }
 
-    // 如果選擇了裝置，則使用裝置的 MAC Address
     let macAddress = formData.macAddress;
     const deviceId = formData.deviceId;
 
@@ -147,7 +143,6 @@ export const ElderList: React.FC = () => {
         updatedAt: now,
       });
 
-      // 更新裝置狀態為已配發
       if (deviceId) {
         await updateDoc(doc(db, "devices", deviceId), {
           status: "assigned",
@@ -160,7 +155,6 @@ export const ElderList: React.FC = () => {
       alert("新增成功！");
       handleCloseModal();
 
-      // Refresh elders list
       if (currentTenantId) {
         await fetchElders(currentTenantId);
       }
@@ -173,26 +167,20 @@ export const ElderList: React.FC = () => {
   };
 
   if (isLoading) {
-    return <LoadingSpinner text="載入長者資料..." />;
+    return <LoadingSpinner text="載入長者資料..." fullPage />;
   }
 
-  if (elders.length === 0) {
-    return (
-      <Box>
-        <Box
-          mb={3}
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Box>
-            <Typography variant="h5" fontWeight={600}>
-              長者列表
-            </Typography>
-            <Typography variant="body2" color="text.secondary" mt={1}>
-              共 0 位長者
-            </Typography>
-          </Box>
+  return (
+    <div className="liff-elder-list">
+      {/* Header */}
+      <div className="liff-elder-list__header">
+        <div className="flex flex-between flex--align-center">
+          <div>
+            <h1 className="liff-elder-list__title">長者列表</h1>
+            <p className="text-body-2 text-secondary mt-2">
+              共 {elders.length} 位長者
+            </p>
+          </div>
           {isAdmin && (
             <Button
               variant="contained"
@@ -202,25 +190,18 @@ export const ElderList: React.FC = () => {
               新增長者
             </Button>
           )}
-        </Box>
+        </div>
+      </div>
 
-        <Box
-          sx={{
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 2,
-            p: 6,
-            textAlign: "center",
-          }}
-        >
-          <Typography variant="h6" color="text.secondary" gutterBottom>
-            暫無長者資料
-          </Typography>
-          <Typography variant="body2" color="text.secondary" mb={2}>
+      {/* Elder Cards */}
+      {elders.length === 0 ? (
+        <div className="liff-elder-list__empty paper paper--elevated">
+          <h3 className="h5 mb-3">暫無長者資料</h3>
+          <p className="text-body-2 text-secondary mb-4">
             {isAdmin
               ? "請點擊上方按鈕新增長者資料"
               : "請聯絡管理員新增長者資料"}
-          </Typography>
+          </p>
           {isAdmin && (
             <Button
               variant="outlined"
@@ -230,211 +211,18 @@ export const ElderList: React.FC = () => {
               新增第一位長者
             </Button>
           )}
-        </Box>
-
-        {/* Add Elder Modal */}
-        <Modal
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          title="新增長者"
-          size="md"
-        >
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}
-          >
-            <TextField
-              label="姓名"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              required
-              fullWidth
+        </div>
+      ) : (
+        <div className="liff-elder-list__cards">
+          {elders.map((elder) => (
+            <ElderCard
+              key={elder.id}
+              elder={elder}
+              onClick={handleElderClick}
             />
-
-            <Grid container spacing={2}>
-              <Grid size={{ xs: 6 }}>
-                <TextField
-                  label="年齡"
-                  type="number"
-                  value={formData.age || ""}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      age: e.target.value
-                        ? parseInt(e.target.value)
-                        : undefined,
-                    })
-                  }
-                  fullWidth
-                />
-              </Grid>
-              <Grid size={{ xs: 6 }}>
-                <TextField
-                  label="性別"
-                  select
-                  value={formData.gender || ""}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      gender: e.target.value as Gender,
-                    })
-                  }
-                  fullWidth
-                >
-                  <MenuItem value="male">男</MenuItem>
-                  <MenuItem value="female">女</MenuItem>
-                  <MenuItem value="other">其他</MenuItem>
-                </TextField>
-              </Grid>
-            </Grid>
-
-            <TextField
-              label="地址"
-              value={formData.address}
-              onChange={(e) =>
-                setFormData({ ...formData, address: e.target.value })
-              }
-              fullWidth
-            />
-
-            <TextField
-              label="聯絡電話"
-              value={formData.contactPhone}
-              onChange={(e) =>
-                setFormData({ ...formData, contactPhone: e.target.value })
-              }
-              fullWidth
-            />
-
-            <TextField
-              label="緊急聯絡人"
-              value={formData.emergencyContact}
-              onChange={(e) =>
-                setFormData({ ...formData, emergencyContact: e.target.value })
-              }
-              fullWidth
-            />
-
-            <TextField
-              label="緊急聯絡電話"
-              value={formData.emergencyPhone}
-              onChange={(e) =>
-                setFormData({ ...formData, emergencyPhone: e.target.value })
-              }
-              fullWidth
-            />
-
-            <TextField
-              select
-              label="選擇裝置（推薦）"
-              value={formData.deviceId}
-              onChange={(e) =>
-                setFormData({ ...formData, deviceId: e.target.value })
-              }
-              fullWidth
-              disabled={loadingDevices}
-              helperText={
-                loadingDevices
-                  ? "載入裝置中..."
-                  : availableDevices.length === 0
-                  ? "暫無可用裝置，請手動輸入 MAC Address"
-                  : "從社區配發的裝置中選擇"
-              }
-            >
-              <MenuItem value="">不選擇（手動輸入MAC）</MenuItem>
-              {availableDevices.map((device) => (
-                <MenuItem key={device.id} value={device.id}>
-                  {device.deviceNumber} - {device.macAddress}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            <TextField
-              label="或手動輸入 MAC 位址"
-              value={formData.macAddress}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  macAddress: e.target.value.toUpperCase(),
-                  deviceId: "",
-                })
-              }
-              fullWidth
-              disabled={!!formData.deviceId}
-              helperText={
-                formData.deviceId
-                  ? "已選擇裝置，無需手動輸入"
-                  : "如果不從上方選擇裝置，請手動輸入"
-              }
-              placeholder="AA:BB:CC:DD:EE:FF"
-            />
-
-            <TextField
-              label="備註"
-              value={formData.notes}
-              onChange={(e) =>
-                setFormData({ ...formData, notes: e.target.value })
-              }
-              multiline
-              rows={3}
-              fullWidth
-            />
-
-            <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
-              <Button
-                variant="outlined"
-                onClick={handleCloseModal}
-                disabled={isSubmitting}
-              >
-                取消
-              </Button>
-              <Button type="submit" variant="contained" disabled={isSubmitting}>
-                {isSubmitting ? "新增中..." : "新增"}
-              </Button>
-            </Box>
-          </Box>
-        </Modal>
-      </Box>
-    );
-  }
-
-  return (
-    <Box>
-      <Box
-        mb={3}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Box>
-          <Typography variant="h5" fontWeight={600}>
-            長者列表
-          </Typography>
-          <Typography variant="body2" color="text.secondary" mt={1}>
-            共 {elders.length} 位長者
-          </Typography>
-        </Box>
-        {isAdmin && (
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={handleOpenModal}
-          >
-            新增長者
-          </Button>
-        )}
-      </Box>
-
-      <Grid container spacing={2}>
-        {elders.map((elder) => (
-          <Grid size={{ xs: 12, md: 6 }} key={elder.id}>
-            <ElderCard elder={elder} onClick={handleElderClick} />
-          </Grid>
-        ))}
-      </Grid>
+          ))}
+        </div>
+      )}
 
       {/* Add Elder Modal */}
       <Modal
@@ -443,50 +231,47 @@ export const ElderList: React.FC = () => {
         title="新增長者"
         size="md"
       >
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}
-        >
+        <form onSubmit={handleSubmit} className="flex flex-column gap-4">
           <TextField
             label="姓名"
             value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, name: e.target.value })
+            }
             required
             fullWidth
           />
 
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 6 }}>
-              <TextField
-                label="年齡"
-                type="number"
-                value={formData.age || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    age: e.target.value ? parseInt(e.target.value) : undefined,
-                  })
-                }
-                fullWidth
-              />
-            </Grid>
-            <Grid size={{ xs: 6 }}>
-              <TextField
-                label="性別"
-                select
-                value={formData.gender || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, gender: e.target.value as Gender })
-                }
-                fullWidth
-              >
-                <MenuItem value="male">男</MenuItem>
-                <MenuItem value="female">女</MenuItem>
-                <MenuItem value="other">其他</MenuItem>
-              </TextField>
-            </Grid>
-          </Grid>
+          <div className="grid grid--cols-2 grid--gap-4">
+            <TextField
+              label="年齡"
+              type="number"
+              value={formData.age || ""}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  age: e.target.value ? parseInt(e.target.value) : undefined,
+                })
+              }
+              fullWidth
+            />
+            <TextField
+              label="性別"
+              select
+              value={formData.gender || ""}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  gender: e.target.value as Gender,
+                })
+              }
+              fullWidth
+            >
+              <MenuItem value="male">男</MenuItem>
+              <MenuItem value="female">女</MenuItem>
+              <MenuItem value="other">其他</MenuItem>
+            </TextField>
+          </div>
 
           <TextField
             label="地址"
@@ -549,25 +334,18 @@ export const ElderList: React.FC = () => {
             ))}
           </TextField>
 
-          <TextField
-            label="或手動輸入 MAC 位址"
-            value={formData.macAddress}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                macAddress: e.target.value.toUpperCase(),
-                deviceId: "",
-              })
-            }
-            fullWidth
-            disabled={!!formData.deviceId}
-            helperText={
-              formData.deviceId
-                ? "已選擇裝置，無需手動輸入"
-                : "如果不從上方選擇裝置，請手動輸入"
-            }
-            placeholder="AA:BB:CC:DD:EE:FF"
-          />
+          {!formData.deviceId && (
+            <TextField
+              label="裝置 MAC Address（手動輸入）"
+              value={formData.macAddress}
+              onChange={(e) =>
+                setFormData({ ...formData, macAddress: e.target.value })
+              }
+              placeholder="例如：AA:BB:CC:DD:EE:FF"
+              fullWidth
+              helperText="如果上方未選擇裝置，請手動輸入 MAC Address"
+            />
+          )}
 
           <TextField
             label="備註"
@@ -580,20 +358,20 @@ export const ElderList: React.FC = () => {
             fullWidth
           />
 
-          <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
-            <Button
-              variant="outlined"
-              onClick={handleCloseModal}
-              disabled={isSubmitting}
-            >
+          <div className="flex flex-end gap-3 mt-4">
+            <Button onClick={handleCloseModal} disabled={isSubmitting}>
               取消
             </Button>
-            <Button type="submit" variant="contained" disabled={isSubmitting}>
-              {isSubmitting ? "新增中..." : "新增"}
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "處理中..." : "確定"}
             </Button>
-          </Box>
-        </Box>
+          </div>
+        </form>
       </Modal>
-    </Box>
+    </div>
   );
 };

@@ -1,0 +1,52 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ============================================
+// Container
+// ============================================
+
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $spacing-4;
+  padding-right: $spacing-4;
+
+  @include respond-above(sm) {
+    max-width: $container-max-width-sm;
+    padding-left: $spacing-6;
+    padding-right: $spacing-6;
+  }
+
+  @include respond-above(md) {
+    max-width: $container-max-width-md;
+  }
+
+  @include respond-above(lg) {
+    max-width: $container-max-width-lg;
+  }
+
+  @include respond-above(xl) {
+    max-width: $container-max-width-xl;
+  }
+
+  &--fluid {
+    max-width: 100%;
+  }
+
+  &--sm {
+    max-width: $container-max-width-sm;
+  }
+
+  &--md {
+    max-width: $container-max-width-md;
+  }
+
+  &--lg {
+    max-width: $container-max-width-lg;
+  }
+
+  &--xl {
+    max-width: $container-max-width-xl;
+  }
+}

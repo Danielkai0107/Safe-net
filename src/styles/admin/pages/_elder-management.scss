@@ -1,0 +1,35 @@
+@use '../../shared/abstracts/variables' as *;
+@use '../../shared/abstracts/mixins' as *;
+
+// ============================================
+// Elder Management Page
+// ============================================
+
+.elder-management {
+  padding: $spacing-6;
+  min-height: 100vh;
+  background-color: $color-bg-muted;
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-6;
+  }
+
+  &__title {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-3;
+  }
+
+  &__content {
+    background: $color-white;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+    overflow: hidden;
+  }
+}

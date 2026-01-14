@@ -1,0 +1,127 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ============================================
+// Card Component
+// ============================================
+
+.card {
+  background-color: $color-bg-paper;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  @include transition(box-shadow, transform);
+
+  &--elevated {
+    box-shadow: $shadow-md;
+
+    &:hover {
+      box-shadow: $shadow-lg;
+      transform: translateY(-2px);
+    }
+  }
+
+  &--bordered {
+    border: 1px solid $color-border-light;
+  }
+
+  &--clickable {
+    cursor: pointer;
+  }
+}
+
+.card__header {
+  padding: $spacing-4 $spacing-6;
+  border-bottom: 1px solid $color-border-light;
+  @include flex-between;
+}
+
+.card__title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+.card__subtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-top: $spacing-1;
+}
+
+.card__content {
+  padding: $spacing-6;
+}
+
+.card__footer {
+  padding: $spacing-4 $spacing-6;
+  border-top: 1px solid $color-border-light;
+  @include flex-end;
+  gap: $spacing-3;
+}
+
+.card__actions {
+  display: flex;
+  gap: $spacing-2;
+}
+
+// Elder Card (specific variant)
+.elder-card {
+  @extend .card;
+  @extend .card--elevated;
+  @extend .card--clickable;
+}
+
+.elder-card__header {
+  padding: $spacing-4;
+  background: linear-gradient(135deg, $color-primary-light 0%, $color-primary 100%);
+  color: $color-white;
+}
+
+.elder-card__name {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  margin: 0;
+}
+
+.elder-card__info {
+  font-size: $font-size-sm;
+  opacity: 0.9;
+  margin-top: $spacing-1;
+}
+
+.elder-card__content {
+  padding: $spacing-4;
+}
+
+.elder-card__row {
+  @include flex-between;
+  padding: $spacing-3 0;
+  border-bottom: 1px solid $color-border-light;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.elder-card__label {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+}
+
+.elder-card__value {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+}
+
+.elder-card__status {
+  margin-top: $spacing-3;
+  @include flex-start;
+  gap: $spacing-2;
+}
+
+.elder-card__footer {
+  padding: $spacing-3 $spacing-4;
+  background-color: $color-gray-50;
+  @include flex-end;
+}

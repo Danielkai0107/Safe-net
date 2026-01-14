@@ -1,0 +1,53 @@
+@use '../../shared/abstracts/variables' as *;
+@use '../../shared/abstracts/mixins' as *;
+
+// ============================================
+// LIFF Elder List Page
+// ============================================
+
+.liff-elder-list {
+  padding: $spacing-4;
+  min-height: 100vh;
+  background-color: $color-bg-muted;
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-6;
+    padding: $spacing-4;
+    background: $color-white;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+  }
+
+  &__filters {
+    display: flex;
+    gap: $spacing-3;
+    margin-bottom: $spacing-4;
+    overflow-x: auto;
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: $spacing-4;
+  }
+
+  &__empty {
+    text-align: center;
+    padding: $spacing-12;
+    color: $color-text-secondary;
+  }
+
+  &__fab {
+    position: fixed;
+    bottom: $spacing-6;
+    right: $spacing-6;
+    z-index: $z-index-fixed;
+  }
+}

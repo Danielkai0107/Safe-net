@@ -1,8 +1,5 @@
 import React from 'react';
 import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
 interface ModalProps {
@@ -10,7 +7,8 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'fullscreen';
+  footer?: React.ReactNode;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -19,34 +17,38 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
   size = 'md',
+  footer,
 }) => {
+  const modalClass = size ? `modal modal--${size}` : 'modal';
+
   return (
     <Dialog
       open={isOpen}
       onClose={onClose}
-      maxWidth={size}
-      fullWidth
+      maxWidth={size === 'fullscreen' ? false : size}
+      fullWidth={size !== 'fullscreen'}
+      fullScreen={size === 'fullscreen'}
+      className={modalClass}
       disableEnforceFocus
-      PaperProps={{
-        sx: { borderRadius: 2 },
-      }}
     >
-      <DialogTitle sx={{ m: 0, p: 2, pr: 6 }}>
-        {title}
-        <IconButton
-          aria-label="close"
+      <div className="modal__header">
+        <h2 className="modal__title">{title}</h2>
+        <button
+          className="modal__close"
           onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
+          aria-label="close"
         >
           <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent dividers>{children}</DialogContent>
+        </button>
+      </div>
+      <div className="modal__content">
+        {children}
+      </div>
+      {footer && (
+        <div className="modal__footer">
+          {footer}
+        </div>
+      )}
     </Dialog>
   );
 };

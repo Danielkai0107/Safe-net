@@ -3,14 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAppStore } from '../../store/store';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Chip from '@mui/material/Chip';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
@@ -68,7 +61,7 @@ export const ElderDetail: React.FC = () => {
   }, [id, fetchElderById, navigate]);
 
   if (isLoading) {
-    return <LoadingSpinner text="載入資料..." />;
+    return <LoadingSpinner text="載入資料..." fullPage />;
   }
 
   if (!elder) {
@@ -80,169 +73,124 @@ export const ElderDetail: React.FC = () => {
   };
 
   return (
-    <Box>
+    <div className="liff-elder-detail">
       <Button
         startIcon={<ArrowBackIcon />}
         onClick={() => navigate('/liff')}
-        sx={{ mb: 2 }}
+        className="mb-4"
       >
         返回列表
       </Button>
 
       {/* Elder Info Card */}
-      <Card elevation={2} sx={{ mb: 3 }}>
-        <CardContent>
-          <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={3}>
-            <Box display="flex" alignItems="center" gap={2}>
-              <Avatar
-                sx={{
-                  width: 64,
-                  height: 64,
-                  bgcolor: 'primary.light',
-                  fontSize: '2rem',
-                }}
-              >
-                👴
-              </Avatar>
-              <Box>
-                <Typography variant="h5" fontWeight={600}>
-                  {elder.name}
-                </Typography>
-                {elder.age && (
-                  <Typography variant="body1" color="text.secondary">
-                    {elder.age} 歲
-                  </Typography>
-                )}
-              </Box>
-            </Box>
-            <StatusBadge status={elder.status} lastSeen={elder.lastSeen} />
-          </Box>
+      <div className="liff-elder-detail__header">
+        <div className="flex flex-between flex--align-start mb-6">
+          <div className="flex flex--align-center gap-4">
+            <div className="liff-elder-detail__avatar">👴</div>
+            <div>
+              <h1 className="liff-elder-detail__name">{elder.name}</h1>
+              {elder.age && (
+                <p className="liff-elder-detail__meta">{elder.age} 歲</p>
+              )}
+            </div>
+          </div>
+          <StatusBadge status={elder.status} lastSeen={elder.lastSeen} />
+        </div>
+      </div>
 
-          <Grid container spacing={2}>
+      {/* Basic Info Section */}
+      <div className="liff-elder-detail__sections">
+        <div className="liff-elder-detail__section">
+          <h2 className="liff-elder-detail__section-title">基本資料</h2>
+          <div className="liff-elder-detail__info-grid">
+            {elder.gender && (
+              <div className="liff-elder-detail__info-item">
+                <div className="liff-elder-detail__info-item-label">性別</div>
+                <div className="liff-elder-detail__info-item-value">
+                  {elder.gender === 'male' ? '男' : elder.gender === 'female' ? '女' : '其他'}
+                </div>
+              </div>
+            )}
             {elder.address && (
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Typography variant="caption" color="text.secondary">
-                  居住地址
-                </Typography>
-                <Typography variant="body2">{elder.address}</Typography>
-              </Grid>
+              <div className="liff-elder-detail__info-item">
+                <div className="liff-elder-detail__info-item-label">地址</div>
+                <div className="liff-elder-detail__info-item-value">{elder.address}</div>
+              </div>
             )}
             {elder.contactPhone && (
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Typography variant="caption" color="text.secondary">
-                  聯絡電話
-                </Typography>
-                <Typography variant="body2">{elder.contactPhone}</Typography>
-              </Grid>
+              <div className="liff-elder-detail__info-item">
+                <div className="liff-elder-detail__info-item-label">聯絡電話</div>
+                <div className="liff-elder-detail__info-item-value">{elder.contactPhone}</div>
+              </div>
             )}
-            {elder.emergencyContact && (
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Typography variant="caption" color="text.secondary">
-                  緊急聯絡人
-                </Typography>
-                <Typography variant="body2">
-                  {elder.emergencyContact}
-                  {elder.emergencyPhone && ` (${elder.emergencyPhone})`}
-                </Typography>
-              </Grid>
-            )}
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Typography variant="caption" color="text.secondary">
-                最後出現時間
-              </Typography>
-              <Typography variant="body2">{formatTime(elder.lastSeen)}</Typography>
-            </Grid>
-            {elder.lastSignalRssi && (
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Typography variant="caption" color="text.secondary">
-                  訊號強度 (RSSI)
-                </Typography>
-                <Typography variant="body2">{elder.lastSignalRssi} dBm</Typography>
-              </Grid>
-            )}
-            {elder.lastGatewayId && (
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Typography variant="caption" color="text.secondary">
-                  Gateway
-                </Typography>
-                <Typography variant="body2">{elder.lastGatewayId}</Typography>
-              </Grid>
-            )}
-          </Grid>
+          </div>
+        </div>
 
-          {elder.notes && (
-            <Paper sx={{ mt: 2, p: 2, bgcolor: 'warning.light' }}>
-              <Typography variant="body2">
-                <strong>備註：</strong> {elder.notes}
-              </Typography>
-            </Paper>
-          )}
-        </CardContent>
-      </Card>
+        {/* Emergency Contact Section */}
+        {(elder.emergencyContact || elder.emergencyPhone) && (
+          <div className="liff-elder-detail__section">
+            <h2 className="liff-elder-detail__section-title">緊急聯絡人</h2>
+            <div className="liff-elder-detail__info-grid">
+              {elder.emergencyContact && (
+                <div className="liff-elder-detail__info-item">
+                  <div className="liff-elder-detail__info-item-label">聯絡人</div>
+                  <div className="liff-elder-detail__info-item-value">{elder.emergencyContact}</div>
+                </div>
+              )}
+              {elder.emergencyPhone && (
+                <div className="liff-elder-detail__info-item">
+                  <div className="liff-elder-detail__info-item-label">電話</div>
+                  <div className="liff-elder-detail__info-item-value">{elder.emergencyPhone}</div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
-      {/* Recent Activity Timeline */}
-      <Card elevation={2}>
-        <CardContent>
-          <Typography variant="h6" fontWeight={600} gutterBottom>
-            最近 24 小時活動紀錄 ({logs.length})
-          </Typography>
+        {/* Device Info Section */}
+        <div className="liff-elder-detail__section">
+          <h2 className="liff-elder-detail__section-title">裝置資訊</h2>
+          <div className="liff-elder-detail__info-grid">
+            <div className="liff-elder-detail__info-item">
+              <div className="liff-elder-detail__info-item-label">MAC Address</div>
+              <div className="liff-elder-detail__info-item-value font-monospace">{elder.macAddress}</div>
+            </div>
+            <div className="liff-elder-detail__info-item">
+              <div className="liff-elder-detail__info-item-label">最後出現</div>
+              <div className="liff-elder-detail__info-item-value">{formatTime(elder.lastSeen)}</div>
+            </div>
+          </div>
+        </div>
 
+        {/* Activity Logs Section */}
+        <div className="liff-elder-detail__section">
+          <h2 className="liff-elder-detail__section-title">24小時活動記錄</h2>
           {logs.length === 0 ? (
-            <Box textAlign="center" py={4}>
-              <Typography variant="body1" color="text.secondary">
-                暫無活動紀錄
-              </Typography>
-            </Box>
+            <p className="text-center text-secondary p-8">暫無活動記錄</p>
           ) : (
-            <Box display="flex" flexDirection="column" gap={2} mt={2}>
+            <div className="flex flex-column gap-3">
               {logs.map((log) => (
-                <Paper key={log.id} variant="outlined" sx={{ p: 2 }}>
-                  <Box display="flex" gap={2}>
-                    <Avatar
-                      sx={{
-                        bgcolor: log.signalType === 'emergency' ? 'error.light' : 'primary.light',
-                      }}
-                    >
-                      {log.signalType === 'emergency' ? '🚨' : '📡'}
-                    </Avatar>
-                    <Box flex={1}>
-                      <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                        <Typography variant="subtitle2" fontWeight={600}>
-                          {log.signalType === 'emergency' && '緊急求救'}
-                          {log.signalType === 'normal' && '一般訊號'}
-                          {log.signalType === 'health' && '健康數據'}
-                          {log.signalType === 'other' && '其他訊號'}
-                        </Typography>
-                        <Chip
-                          label={log.signalType}
-                          color={log.signalType === 'emergency' ? 'error' : 'default'}
-                          size="small"
-                        />
-                      </Box>
-                      <Typography variant="body2" color="text.secondary">
-                        {formatTime(log.timestamp)}
-                      </Typography>
-                      <Box display="flex" gap={2} mt={1}>
-                        <Typography variant="caption" color="text.secondary">
-                          RSSI: {log.rssi} dBm
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Gateway: {log.gatewayId}
-                        </Typography>
-                        {log.metadata?.batteryLevel !== undefined && (
-                          <Typography variant="caption" color="text.secondary">
-                            電量: {log.metadata.batteryLevel}%
-                          </Typography>
-                        )}
-                      </Box>
-                    </Box>
-                  </Box>
-                </Paper>
+                <div key={log.id} className="paper paper--bordered p-4">
+                  <div className="flex flex-between flex--align-center mb-2">
+                    <Chip
+                      label={log.signalType === 'emergency' ? '緊急' : log.signalType === 'health' ? '健康' : '正常'}
+                      color={log.signalType === 'emergency' ? 'error' : log.signalType === 'health' ? 'warning' : 'success'}
+                      size="small"
+                    />
+                    <span className="text-caption">{formatTime(log.timestamp)}</span>
+                  </div>
+                  {log.gatewayId && (
+                    <p className="text-body-2">網關：{log.gatewayId}</p>
+                  )}
+                  <p className="text-caption text-secondary">
+                    信號強度：{log.rssi} dBm
+                  </p>
+                </div>
               ))}
-            </Box>
+            </div>
           )}
-        </CardContent>
-      </Card>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 };

@@ -1,19 +1,11 @@
 import React from 'react';
-import MuiTable from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 
 interface Column<T> {
   key: string;
   header: string;
   render: (item: T) => React.ReactNode;
   width?: string;
+  align?: 'left' | 'center' | 'right';
 }
 
 interface TableProps<T> {
@@ -30,53 +22,48 @@ export function Table<T extends { id: string }>({
   emptyMessage = '暫無資料',
 }: TableProps<T>) {
   return (
-    <TableContainer component={Paper}>
-      <MuiTable>
-        <TableHead>
-          <TableRow>
+    <div className="data-table__wrapper">
+      <table className="data-table">
+        <thead className="data-table__header">
+          <tr className="data-table__header-row">
             {columns.map((column) => (
-              <TableCell
+              <th
                 key={column.key}
-                sx={{ width: column.width, fontWeight: 600 }}
+                style={{ width: column.width }}
+                className={column.align ? `data-table__cell--${column.align}` : ''}
               >
                 {column.header}
-              </TableCell>
+              </th>
             ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
+          </tr>
+        </thead>
+        <tbody className="data-table__body">
           {data.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={columns.length} align="center">
-                <Box py={6}>
-                  <Typography variant="body1" color="text.secondary">
-                    {emptyMessage}
-                  </Typography>
-                </Box>
-              </TableCell>
-            </TableRow>
+            <tr>
+              <td colSpan={columns.length} className="data-table__empty">
+                {emptyMessage}
+              </td>
+            </tr>
           ) : (
             data.map((item) => (
-              <TableRow
+              <tr
                 key={item.id}
+                className={`data-table__row ${onRowClick ? 'data-table__row--clickable' : ''}`}
                 onClick={() => onRowClick && onRowClick(item)}
-                sx={{
-                  cursor: onRowClick ? 'pointer' : 'default',
-                  '&:hover': onRowClick
-                    ? { backgroundColor: 'action.hover' }
-                    : {},
-                }}
               >
                 {columns.map((column) => (
-                  <TableCell key={column.key}>
+                  <td
+                    key={column.key}
+                    className={column.align ? `data-table__cell data-table__cell--${column.align}` : 'data-table__cell'}
+                  >
                     {column.render(item)}
-                  </TableCell>
+                  </td>
                 ))}
-              </TableRow>
+              </tr>
             ))
           )}
-        </TableBody>
-      </MuiTable>
-    </TableContainer>
+        </tbody>
+      </table>
+    </div>
   );
 }

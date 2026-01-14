@@ -2,23 +2,16 @@ import React, { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAppStore } from '../../store/store';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import Paper from '@mui/material/Paper';
-import Avatar from '@mui/material/Avatar';
-import Stack from '@mui/material/Stack';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { StatusBadge } from '../../components/StatusBadge';
 import type { Alert as AlertType } from '../../types';
 
 export const AlertList: React.FC = () => {
-  const { alerts, isLoading, lineUserId, isAdmin } = useAppStore();
+  const { alerts, isLoading, lineUserId } = useAppStore();
   const [filter, setFilter] = useState<'all' | 'pending' | 'acknowledged' | 'resolved'>('all');
 
   const filteredAlerts = filter === 'all' ? alerts : alerts.filter((a) => a.status === filter);
@@ -74,130 +67,129 @@ export const AlertList: React.FC = () => {
     }
   };
 
+  const getAlertTypeText = (alertType: string) => {
+    switch (alertType) {
+      case 'emergency':
+        return '緊急警報';
+      case 'inactivity':
+        return '長時間未活動';
+      case 'low_battery':
+        return '電量不足';
+      case 'device_offline':
+        return '裝置離線';
+      default:
+        return '其他警報';
+    }
+  };
+
   if (isLoading) {
-    return <LoadingSpinner text="載入警報資料..." />;
+    return <LoadingSpinner text="載入警報資料..." fullPage />;
   }
 
   return (
-    <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Box>
-          <Typography variant="h5" fontWeight={600}>
-            警報記錄
-          </Typography>
-          <Typography variant="body2" color="text.secondary" mt={1}>
-            共 {filteredAlerts.length} 筆警報
-          </Typography>
-        </Box>
+    <div className="liff-alert-list">
+      {/* Header */}
+      <div className="liff-alert-list__header">
+        <div className="flex flex-between flex--align-center">
+          <div>
+            <h1 className="liff-alert-list__title">警報記錄</h1>
+            <p className="text-body-2 text-secondary mt-2">
+              共 {filteredAlerts.length} 筆警報
+            </p>
+          </div>
+          <TextField
+            select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value as any)}
+            size="small"
+            sx={{ minWidth: 120 }}
+          >
+            <MenuItem value="all">全部</MenuItem>
+            <MenuItem value="pending">待處理</MenuItem>
+            <MenuItem value="acknowledged">已確認</MenuItem>
+            <MenuItem value="resolved">已解決</MenuItem>
+          </TextField>
+        </div>
+      </div>
 
-        <TextField
-          select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value as any)}
-          size="small"
-          sx={{ minWidth: 120 }}
-        >
-          <MenuItem value="all">全部</MenuItem>
-          <MenuItem value="pending">待處理</MenuItem>
-          <MenuItem value="acknowledged">已確認</MenuItem>
-          <MenuItem value="resolved">已解決</MenuItem>
-        </TextField>
-      </Box>
-
+      {/* Alert List */}
       {filteredAlerts.length === 0 ? (
-        <Card elevation={2}>
-          <CardContent>
-            <Box textAlign="center" py={6}>
-              <Typography variant="h6" color="text.secondary">
-                暫無警報記錄
-              </Typography>
-            </Box>
-          </CardContent>
-        </Card>
+        <div className="liff-alert-list__empty">
+          <p className="text-body-1 text-secondary">暫無警報記錄</p>
+        </div>
       ) : (
-        <Stack spacing={2}>
-          {filteredAlerts.map((alertItem) => (
-            <Card key={alertItem.id} elevation={2}>
-              <CardContent>
-                <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
-                  <Box display="flex" gap={2}>
-                    <Avatar
-                      sx={{
-                        bgcolor:
-                          alertItem.severity === 'critical'
-                            ? 'error.light'
-                            : alertItem.severity === 'high'
-                            ? 'warning.light'
-                            : 'info.light',
-                        fontSize: '2rem',
-                      }}
-                    >
-                      {getAlertIcon(alertItem.alertType)}
-                    </Avatar>
-                    <Box>
-                      <Typography variant="h6" fontWeight={600} gutterBottom>
-                        {alertItem.elderName}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" paragraph>
-                        {alertItem.message}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {formatTime(alertItem.createdAt)}
-                      </Typography>
-                    </Box>
-                  </Box>
-                  <Stack spacing={1} alignItems="flex-end">
-                    <StatusBadge status={alertItem.status} />
-                    <StatusBadge status={alertItem.severity} />
-                  </Stack>
-                </Box>
+        <div className="liff-alert-list__list">
+          {filteredAlerts.map((alert) => (
+            <div
+              key={alert.id}
+              className={`liff-alert-list__alert-item ${
+                alert.severity === 'critical'
+                  ? 'liff-alert-list__alert-item--critical'
+                  : alert.status === 'resolved'
+                  ? 'liff-alert-list__alert-item--resolved'
+                  : ''
+              }`}
+            >
+              <div className="flex flex-between flex--align-start mb-3">
+                <div className="flex flex--align-center gap-3">
+                  <span className="text-2xl">{getAlertIcon(alert.alertType)}</span>
+                  <div>
+                    <h3 className="h6 mb-1">{getAlertTypeText(alert.alertType)}</h3>
+                    <p className="text-caption text-secondary">
+                      {formatTime(alert.createdAt)}
+                    </p>
+                  </div>
+                </div>
+                <StatusBadge status={alert.status} />
+              </div>
 
-                {alertItem.status === 'acknowledged' && alertItem.acknowledgedAt && (
-                  <Paper sx={{ mt: 2, p: 2, bgcolor: 'info.lighter' }}>
-                    <Typography variant="body2" color="info.dark">
-                      已確認於 {formatTime(alertItem.acknowledgedAt)}
-                    </Typography>
-                  </Paper>
-                )}
+              {alert.message && (
+                <p className="text-body-2 mb-3">{alert.message}</p>
+              )}
 
-                {alertItem.status === 'resolved' && alertItem.resolvedAt && (
-                  <Paper sx={{ mt: 2, p: 2, bgcolor: 'success.lighter' }}>
-                    <Typography variant="body2" color="success.dark">
-                      已解決於 {formatTime(alertItem.resolvedAt)}
-                    </Typography>
-                  </Paper>
-                )}
+              {alert.elderName && (
+                <p className="text-body-2 mb-2">
+                  <strong>長者：</strong>{alert.elderName}
+                </p>
+              )}
 
-                {/* Actions - Only for Admin */}
-                {isAdmin && (
-                  <Box display="flex" gap={1} mt={2}>
-                    {alertItem.status === 'pending' && (
-                      <Button
-                        variant="contained"
-                        size="small"
-                        onClick={() => handleAcknowledge(alertItem)}
-                      >
-                        確認
-                      </Button>
-                    )}
-                    {alertItem.status === 'acknowledged' && (
-                      <Button
-                        variant="contained"
-                        color="success"
-                        size="small"
-                        startIcon={<CheckCircleIcon />}
-                        onClick={() => handleResolve(alertItem)}
-                      >
-                        標記為已解決
-                      </Button>
-                    )}
-                  </Box>
-                )}
-              </CardContent>
-            </Card>
+              {alert.status === 'pending' && (
+                <div className="flex gap-2 mt-3">
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={() => handleAcknowledge(alert)}
+                  >
+                    確認
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    color="success"
+                    startIcon={<CheckCircleIcon />}
+                    onClick={() => handleResolve(alert)}
+                  >
+                    解決
+                  </Button>
+                </div>
+              )}
+
+              {alert.status === 'acknowledged' && (
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="success"
+                  startIcon={<CheckCircleIcon />}
+                  onClick={() => handleResolve(alert)}
+                  className="mt-3"
+                >
+                  標記為已解決
+                </Button>
+              )}
+            </div>
           ))}
-        </Stack>
+        </div>
       )}
-    </Box>
+    </div>
   );
 };

@@ -1,0 +1,69 @@
+@use '../../shared/abstracts/variables' as *;
+@use '../../shared/abstracts/mixins' as *;
+
+// ============================================
+// LIFF Alert List Page
+// ============================================
+
+.liff-alert-list {
+  padding: $spacing-4;
+  min-height: 100vh;
+  background-color: $color-bg-muted;
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-4;
+    padding: $spacing-4;
+    background: $color-white;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+  }
+
+  &__filters {
+    display: flex;
+    gap: $spacing-2;
+    margin-bottom: $spacing-4;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-3;
+  }
+
+  &__alert-item {
+    background: $color-white;
+    padding: $spacing-4;
+    border-radius: $radius-lg;
+    border-left: 4px solid $color-warning;
+    box-shadow: $shadow-sm;
+    cursor: pointer;
+    @include transition(box-shadow, transform);
+
+    &:hover {
+      box-shadow: $shadow-md;
+      transform: translateX(4px);
+    }
+
+    &--critical {
+      border-left-color: $color-error;
+    }
+
+    &--resolved {
+      border-left-color: $color-success;
+      opacity: 0.7;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: $spacing-12;
+    color: $color-text-secondary;
+  }
+}

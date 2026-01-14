@@ -1,0 +1,83 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+// ============================================
+// Badge Component (Status Badge)
+// ============================================
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-2 $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid $color-gray-200;
+
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: $radius-full;
+    background-color: currentColor;
+  }
+
+  // Variants
+  &--active,
+  &--online {
+    background-color: alpha-color($color-success, 0.1);
+    color: $color-success-dark;
+  }
+
+  &--inactive,
+  &--offline {
+    background-color: alpha-color($color-gray-500, 0.1);
+    color: $color-gray-700;
+  }
+
+  &--warning {
+    background-color: alpha-color($color-warning, 0.1);
+    color: $color-warning-dark;
+  }
+
+  &--error,
+  &--danger {
+    background-color: alpha-color($color-error, 0.1);
+    color: $color-error-dark;
+  }
+
+  &--info {
+    background-color: alpha-color($color-info, 0.1);
+    color: $color-info-dark;
+  }
+
+  &--success {
+    background-color: alpha-color($color-success, 0.1);
+    color: $color-success-dark;
+  }
+
+  // Size variants
+  &--sm {
+    padding: $spacing-1 $spacing-2;
+    font-size: $font-size-xs;
+
+    &::before {
+      width: 4px;
+      height: 4px;
+    }
+  }
+
+  &--lg {
+    padding: $spacing-2 $spacing-4;
+    font-size: $font-size-sm;
+
+    &::before {
+      width: 8px;
+      height: 8px;
+    }
+  }
+}

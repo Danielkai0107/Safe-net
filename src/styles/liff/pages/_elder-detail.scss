@@ -1,0 +1,78 @@
+@use '../../shared/abstracts/variables' as *;
+@use '../../shared/abstracts/mixins' as *;
+
+// ============================================
+// LIFF Elder Detail Page
+// ============================================
+
+.liff-elder-detail {
+  padding: $spacing-4;
+  min-height: 100vh;
+  background-color: $color-bg-muted;
+
+  &__header {
+    background: linear-gradient(135deg, $color-primary-light 0%, $color-primary 100%);
+    color: $color-white;
+    padding: $spacing-6;
+    border-radius: $radius-lg;
+    margin-bottom: $spacing-4;
+  }
+
+  &__name {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-2;
+  }
+
+  &__meta {
+    font-size: $font-size-sm;
+    opacity: 0.9;
+  }
+
+  &__sections {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-4;
+  }
+
+  &__section {
+    background: $color-white;
+    padding: $spacing-6;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+  }
+
+  &__section-title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    margin-bottom: $spacing-4;
+    padding-bottom: $spacing-3;
+    border-bottom: 2px solid $color-border-light;
+  }
+
+  &__info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $spacing-4;
+  }
+
+  &__info-item {
+    &-label {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+      margin-bottom: $spacing-1;
+    }
+
+    &-value {
+      font-size: $font-size-base;
+      color: $color-text-primary;
+      font-weight: $font-weight-medium;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-3;
+    margin-top: $spacing-6;
+  }
+}

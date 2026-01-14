@@ -1,10 +1,14 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { Button } from "./components/Button";
 import { Login } from "./admin/pages/Login";
 import { FirebaseTest } from "./admin/pages/FirebaseTest";
 import { AdminDashboard } from "./admin/pages/AdminDashboard";
@@ -14,7 +18,6 @@ import { DeviceManagement } from "./admin/pages/DeviceManagement";
 import { GatewayManagement } from "./admin/pages/GatewayManagement";
 import { TestingTools } from "./admin/pages/TestingTools";
 import { LiffApp } from "./liff/pages/LiffApp";
-import "./index.css";
 
 function App() {
   return (
@@ -93,56 +96,23 @@ function App() {
 
 // Simple Home Page
 const HomePage: React.FC = () => {
-  return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "white",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-        gap: 4,
-        p: 4,
-      }}
-    >
-      <Box textAlign="center">
-        <Typography
-          variant="h2"
-          component="h1"
-          fontWeight={700}
-          color="white"
-          gutterBottom
-        >
-          🏘️ Community Guardian SaaS
-        </Typography>
-        <Typography variant="h5" color="white" sx={{ opacity: 0.9 }}>
-          B2B2C 物聯網社區守護系統
-        </Typography>
-      </Box>
+  const navigate = useNavigate();
 
-      <Button
-        component={Link}
-        to="/login"
-        variant="contained"
-        size="large"
-        sx={{
-          bgcolor: "white",
-          color: "primary.main",
-          px: 6,
-          py: 2,
-          fontSize: "1.1rem",
-          fontWeight: 600,
-          "&:hover": {
-            bgcolor: "rgba(255, 255, 255, 0.9)",
-            transform: "scale(1.05)",
-          },
-          transition: "all 0.3s",
-        }}
-      >
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
+  return (
+    <div className="home-page">
+      <div className="home-page__content">
+        <h1 className="home-page__title">Community Guardian SaaS</h1>
+        <h2 className="home-page__subtitle">B2B2C 物聯網社區守護系統</h2>
+      </div>
+
+      <Button variant="primary" size="lg" onClick={handleLogin}>
         管理員登入
       </Button>
-    </Box>
+    </div>
   );
 };
 

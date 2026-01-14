@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
-  Box,
-  Container,
-  Paper,
-  Typography,
   TextField,
   Button,
   Alert,
   InputAdornment,
   IconButton,
-  Avatar,
 } from "@mui/material";
 import {
   Visibility,
@@ -103,69 +98,31 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "white",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        py: 4,
-      }}
-    >
-      <Container maxWidth="sm">
-        <Paper
-          elevation={24}
-          sx={{
-            p: 4,
-            borderRadius: 2,
-          }}
-        >
+    <div className="login-page">
+      <div className="container container--sm">
+        <div className="login-page__container">
           {/* Logo and Title */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              mb: 3,
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 64,
-                height: 64,
-                bgcolor: "primary.main",
-                mb: 2,
-              }}
-            >
+          <div className="login-page__header">
+            <div className="login-page__icon">
               <AdminPanelSettings sx={{ fontSize: 36 }} />
-            </Avatar>
-            <Typography
-              variant="h4"
-              component="h1"
-              fontWeight={700}
-              gutterBottom
-            >
-              超級後台登入
-            </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              textAlign="center"
-            >
+            </div>
+            <h1 className="login-page__title">超級後台登入</h1>
+            <p className="login-page__subtitle">
               Community Guardian SaaS 管理系統
-            </Typography>
-          </Box>
+            </p>
+          </div>
 
           {/* Error Alert */}
           {error && (
-            <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError("")}>
-              {error}
-            </Alert>
+            <div className="login-page__alert">
+              <Alert severity="error" onClose={() => setError("")}>
+                {error}
+              </Alert>
+            </div>
           )}
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="login-page__form">
             <TextField
               label="電子郵件"
               type="email"
@@ -175,7 +132,6 @@ export const Login: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
               autoFocus
-              sx={{ mb: 2 }}
               disabled={loading}
             />
 
@@ -187,7 +143,6 @@ export const Login: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
-              sx={{ mb: 3 }}
               disabled={loading}
               InputProps={{
                 endAdornment: (
@@ -205,47 +160,39 @@ export const Login: React.FC = () => {
               }}
             />
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              size="large"
-              disabled={loading}
-              startIcon={<LockOutlined />}
-              sx={{
-                py: 1.5,
-                fontWeight: 600,
-                fontSize: "1rem",
-              }}
-            >
-              {loading ? "登入中..." : "登入"}
-            </Button>
+            <div className="login-page__submit">
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                size="large"
+                disabled={loading}
+                startIcon={<LockOutlined />}
+              >
+                {loading ? "登入中..." : "登入"}
+              </Button>
+            </div>
           </form>
 
           {/* Additional Info */}
-          <Box sx={{ mt: 3, textAlign: "center" }}>
-            <Typography variant="caption" color="text.secondary">
-              請使用您的管理員帳號登入
-            </Typography>
-          </Box>
-        </Paper>
+          <div className="text-center mt-6">
+            <p className="text-caption">請使用您的管理員帳號登入</p>
+          </div>
+        </div>
 
         {/* Back to Home Link */}
-        <Box sx={{ mt: 2, textAlign: "center" }}>
+        <div className="text-center mt-4">
           <Button
             variant="text"
             onClick={() => navigate("/")}
             sx={{
-              color: "white",
-              "&:hover": {
-                bgcolor: "rgba(255, 255, 255, 0.1)",
-              },
+              color: "gray",
             }}
           >
             返回首頁
           </Button>
-        </Box>
-      </Container>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 };

@@ -292,20 +292,11 @@ export const TenantManagement: React.FC = () => {
       key: 'adminCount',
       header: '管理權限',
       render: (tenant: Tenant) => (
-        <Box display="flex" flexDirection="column" gap={0.5}>
-          <Typography variant="body2">
-            {tenant.adminLineIds && tenant.adminLineIds.length > 0
-              ? `${tenant.adminLineIds.length} 位管理員`
-              : '所有 OA 用戶'}
-          </Typography>
-          <Button
-            size="small"
-            variant="text"
-            onClick={() => handleShowUsers(tenant)}
-          >
-            管理用戶
-          </Button>
-        </Box>
+        <Typography variant="body2">
+          {tenant.adminLineIds && tenant.adminLineIds.length > 0
+            ? `${tenant.adminLineIds.length} 位管理員`
+            : '所有 OA 用戶'}
+        </Typography>
       ),
     },
     {
@@ -334,7 +325,14 @@ export const TenantManagement: React.FC = () => {
       key: 'actions',
       header: '操作',
       render: (tenant: Tenant) => (
-        <Box display="flex" gap={1}>
+        <Box display="flex" gap={1} alignItems="center">
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() => handleShowUsers(tenant)}
+          >
+            管理用戶
+          </Button>
           <IconButton size="small" color="primary" onClick={() => handleOpenModal(tenant)}>
             <EditIcon fontSize="small" />
           </IconButton>

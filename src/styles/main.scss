@@ -1,0 +1,83 @@
+// ============================================
+// Main SASS Entry Point
+// ============================================
+
+// Abstracts (no CSS output, just variables/mixins/functions)
+@use "shared/abstracts/variables" as *;
+@use "shared/abstracts/mixins" as *;
+@use "shared/abstracts/functions" as *;
+
+// Base styles
+@use "shared/base/reset";
+@use "shared/base/typography";
+@use "shared/base/utilities";
+
+// Layout
+@use "shared/layout/container";
+@use "shared/layout/grid";
+@use "shared/layout/flex";
+
+// Shared components
+@use "shared/components/button";
+@use "shared/components/spinner";
+@use "shared/components/badge";
+@use "shared/components/card";
+@use "shared/components/modal";
+@use "shared/components/table";
+
+// Feature sections
+@use "admin/admin";
+@use "liff/liff";
+
+// ============================================
+// App-specific styles - Home Page
+// ============================================
+
+.home-page {
+  min-height: 100vh;
+  background: $color-white;
+  @include flex-column-center;
+  gap: $spacing-8;
+  padding: $spacing-8;
+
+  @include respond-below(md) {
+    padding: $spacing-4;
+    gap: $spacing-6;
+  }
+
+  &__content {
+    text-align: center;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  &__title {
+    font-size: $font-size-5xl;
+    font-weight: 600;
+    color: $color-gray-900;
+    margin-bottom: $spacing-4;
+  }
+
+  &__subtitle {
+    font-size: $font-size-xl;
+    font-weight: 400;
+    color: $color-gray-700;
+    opacity: 0.9;
+    margin: 0;
+
+    @include respond-below(md) {
+      font-size: $font-size-lg;
+    }
+
+    @include respond-below(sm) {
+      font-size: $font-size-base;
+    }
+  }
+
+  .btn {
+    box-shadow: none;
+
+    &:hover {
+      background: $color-primary;
+    }
+  }
+}

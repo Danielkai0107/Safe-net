@@ -1,14 +1,4 @@
 import React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardActionArea from '@mui/material/CardActionArea';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import Stack from '@mui/material/Stack';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import PhoneIcon from '@mui/icons-material/Phone';
 import type { Elder } from '../types';
 import { StatusBadge } from './StatusBadge';
 
@@ -31,66 +21,48 @@ export const ElderCard: React.FC<ElderCardProps> = ({ elder, onClick }) => {
     return date.toLocaleDateString('zh-TW');
   };
 
-  const CardWrapper: React.ComponentType<any> = onClick ? CardActionArea : Box;
+  const handleClick = () => {
+    if (onClick) {
+      onClick(elder);
+    }
+  };
 
   return (
-    <Card elevation={2}>
-      <CardWrapper onClick={() => onClick && onClick(elder)}>
-        <CardContent>
-          <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
-            <Box display="flex" alignItems="center" gap={2}>
-              <Avatar
-                sx={{
-                  width: 56,
-                  height: 56,
-                  bgcolor: 'primary.light',
-                  fontSize: '2rem',
-                }}
-              >
-                👴
-              </Avatar>
-              <Box>
-                <Typography variant="h6" component="div" gutterBottom sx={{ mb: 0.5 }}>
-                  {elder.name}
-                </Typography>
-                {elder.age && (
-                  <Typography variant="body2" color="text.secondary">
-                    {elder.age} 歲
-                  </Typography>
-                )}
-              </Box>
-            </Box>
-            <StatusBadge status={elder.status} lastSeen={elder.lastSeen} />
-          </Box>
+    <div 
+      className={`elder-card ${onClick ? 'elder-card--clickable' : ''}`}
+      onClick={handleClick}
+    >
+      <div className="elder-card__header">
+        <div className="elder-card__name">{elder.name}</div>
+        {elder.age && (
+          <div className="elder-card__info">{elder.age} 歲</div>
+        )}
+      </div>
 
-          <Stack spacing={1}>
-            <Box display="flex" alignItems="center" gap={1}>
-              <AccessTimeIcon fontSize="small" color="action" />
-              <Typography variant="body2" color="text.secondary">
-                最後出現：{formatLastSeen(elder.lastSeen)}
-              </Typography>
-            </Box>
+      <div className="elder-card__content">
+        <div className="elder-card__row">
+          <span className="elder-card__label">最後出現</span>
+          <span className="elder-card__value">{formatLastSeen(elder.lastSeen)}</span>
+        </div>
 
-            {elder.address && (
-              <Box display="flex" alignItems="center" gap={1}>
-                <LocationOnIcon fontSize="small" color="action" />
-                <Typography variant="body2" color="text.secondary" noWrap>
-                  {elder.address}
-                </Typography>
-              </Box>
-            )}
+        {elder.address && (
+          <div className="elder-card__row">
+            <span className="elder-card__label">地址</span>
+            <span className="elder-card__value">{elder.address}</span>
+          </div>
+        )}
 
-            {elder.emergencyContact && (
-              <Box display="flex" alignItems="center" gap={1}>
-                <PhoneIcon fontSize="small" color="action" />
-                <Typography variant="body2" color="text.secondary">
-                  緊急聯絡人：{elder.emergencyContact}
-                </Typography>
-              </Box>
-            )}
-          </Stack>
-        </CardContent>
-      </CardWrapper>
-    </Card>
+        {elder.emergencyContact && (
+          <div className="elder-card__row">
+            <span className="elder-card__label">緊急聯絡人</span>
+            <span className="elder-card__value">{elder.emergencyContact}</span>
+          </div>
+        )}
+
+        <div className="elder-card__status">
+          <StatusBadge status={elder.status} lastSeen={elder.lastSeen} />
+        </div>
+      </div>
+    </div>
   );
 };

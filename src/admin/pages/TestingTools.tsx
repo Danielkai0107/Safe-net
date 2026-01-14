@@ -1,10 +1,6 @@
 import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link } from "react-router-dom";
@@ -28,7 +24,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`testing-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
+      {value === index && <div className="p-6">{children}</div>}
     </div>
   );
 }
@@ -36,33 +32,31 @@ function TabPanel(props: TabPanelProps) {
 export const TestingTools: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);
   };
 
   return (
-    <Box sx={{ bgcolor: "background.default", minHeight: "100vh", py: 4 }}>
-      <Container maxWidth="xl">
+    <div className="testing-tools">
+      <div className="container container--xl">
         {/* Header */}
-        <Box mb={4}>
+        <div className="testing-tools__header">
           <Button
             component={Link}
             to="/admin"
             startIcon={<ArrowBackIcon />}
-            sx={{ mb: 2 }}
+            className="mb-4"
           >
             返回主控台
           </Button>
-          <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-            🧪 測試工具
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
+          <h1 className="testing-tools__title">🧪 測試工具</h1>
+          <p className="testing-tools__subtitle">
             硬體訊號模擬與 LINE 通知測試
-          </Typography>
-        </Box>
+          </p>
+        </div>
 
         {/* Tabs */}
-        <Paper elevation={2}>
+        <div className="paper paper--elevated">
           <Tabs
             value={currentTab}
             onChange={handleTabChange}
@@ -80,8 +74,8 @@ export const TestingTools: React.FC = () => {
           <TabPanel value={currentTab} index={1}>
             <LineNotificationTester />
           </TabPanel>
-        </Paper>
-      </Container>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 };

@@ -1,41 +1,44 @@
 import React from 'react';
-import MuiButton from '@mui/material/Button';
-import type { ButtonProps as MuiButtonProps } from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
 
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'success';
+type ButtonSize = 'sm' | 'md' | 'lg';
 
-interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'color'> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
+  size?: ButtonSize;
   isLoading?: boolean;
+  fullWidth?: boolean;
   children: React.ReactNode;
 }
 
-const variantMap: Record<ButtonVariant, { variant: 'contained' | 'outlined'; color: any }> = {
-  primary: { variant: 'contained', color: 'primary' },
-  secondary: { variant: 'outlined', color: 'primary' },
-  danger: { variant: 'contained', color: 'error' },
-  success: { variant: 'contained', color: 'success' },
-};
-
 export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
+  size = 'md',
   isLoading = false,
+  fullWidth = false,
   disabled,
   children,
+  className = '',
   ...props
 }) => {
-  const { variant: muiVariant, color } = variantMap[variant];
+  const classNames = [
+    'btn',
+    `btn--${variant}`,
+    size !== 'md' && `btn--${size}`,
+    isLoading && 'btn--loading',
+    fullWidth && 'btn--full-width',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <MuiButton
-      variant={muiVariant}
-      color={color}
+    <button
+      className={classNames}
       disabled={disabled || isLoading}
-      startIcon={isLoading ? <CircularProgress size={16} color="inherit" /> : undefined}
       {...props}
     >
       {isLoading ? '處理中...' : children}
-    </MuiButton>
+    </button>
   );
 };

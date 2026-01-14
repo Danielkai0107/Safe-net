@@ -1,0 +1,28 @@
+@use '../../shared/abstracts/variables' as *;
+@use '../../shared/abstracts/mixins' as *;
+
+// ============================================
+// Testing Tools Page
+// ============================================
+
+.testing-tools {
+  padding: $spacing-6;
+  min-height: 100vh;
+  background-color: $color-bg-muted;
+
+  &__header {
+    margin-bottom: $spacing-6;
+  }
+
+  &__title {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-2;
+  }
+
+  &__subtitle {
+    font-size: $font-size-base;
+    color: $color-text-secondary;
+  }
+}

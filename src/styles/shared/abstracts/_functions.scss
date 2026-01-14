@@ -1,0 +1,30 @@
+// ============================================
+// Functions
+// ============================================
+@use 'sass:color';
+@use 'sass:math';
+
+// Convert pixels to rem
+@function px-to-rem($px, $base: 16) {
+  @return math.div($px, $base) * 1rem;
+}
+
+// Get spacing value
+@function spacing($multiplier) {
+  @return $spacing-4 * $multiplier;
+}
+
+// Lighten color
+@function lighten-color($color, $percentage) {
+  @return color.mix(white, $color, $percentage);
+}
+
+// Darken color
+@function darken-color($color, $percentage) {
+  @return color.mix(black, $color, $percentage);
+}
+
+// Add alpha to color
+@function alpha-color($color, $alpha) {
+  @return rgba($color, $alpha);
+}

@@ -192,26 +192,27 @@ export const GatewayManagement: React.FC = () => {
     }
   };
 
-  const handleSetMaintenance = async (gateway: Gateway) => {
-    const newStatus = gateway.status === 'maintenance' ? 'active' : 'maintenance';
-    const action = newStatus === 'maintenance' ? '設為維護中' : '恢復運作';
+  // Maintenance function (currently unused, kept for future use)
+  // const handleSetMaintenance = async (gateway: Gateway) => {
+  //   const newStatus = gateway.status === 'maintenance' ? 'active' : 'maintenance';
+  //   const action = newStatus === 'maintenance' ? '設為維護中' : '恢復運作';
 
-    if (!confirm(`確定要${action}接收點「${gateway.location}」嗎？`)) {
-      return;
-    }
+  //   if (!confirm(`確定要${action}接收點「${gateway.location}」嗎？`)) {
+  //     return;
+  //   }
 
-    try {
-      await updateDoc(doc(db, 'gateways', gateway.id), {
-        status: newStatus,
-        updatedAt: new Date().toISOString(),
-      });
-      alert(`${action}成功！`);
-      fetchGateways();
-    } catch (error: any) {
-      console.error('Error:', error);
-      alert(`${action}失敗：` + error.message);
-    }
-  };
+  //   try {
+  //     await updateDoc(doc(db, 'gateways', gateway.id), {
+  //       status: newStatus,
+  //       updatedAt: new Date().toISOString(),
+  //     });
+  //     alert(`${action}成功！`);
+  //     fetchGateways();
+  //   } catch (error: any) {
+  //     console.error('Error:', error);
+  //     alert(`${action}失敗：` + error.message);
+  //   }
+  // };
 
   const handleDelete = async (gateway: Gateway) => {
     if (!confirm(`確定要永久刪除接收點「${gateway.location}」嗎？此操作無法復原。`)) {

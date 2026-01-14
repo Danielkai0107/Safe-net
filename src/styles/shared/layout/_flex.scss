@@ -1,0 +1,87 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ============================================
+// Flex Layout
+// ============================================
+
+.flex {
+  display: flex;
+
+  &--column {
+    flex-direction: column;
+  }
+
+  &--row {
+    flex-direction: row;
+  }
+
+  &--wrap {
+    flex-wrap: wrap;
+  }
+
+  // Justify Content
+  &--justify-start {
+    justify-content: flex-start;
+  }
+
+  &--justify-end {
+    justify-content: flex-end;
+  }
+
+  &--justify-center {
+    justify-content: center;
+  }
+
+  &--justify-between {
+    justify-content: space-between;
+  }
+
+  &--justify-around {
+    justify-content: space-around;
+  }
+
+  // Align Items
+  &--align-start {
+    align-items: flex-start;
+  }
+
+  &--align-end {
+    align-items: flex-end;
+  }
+
+  &--align-center {
+    align-items: center;
+  }
+
+  &--align-baseline {
+    align-items: baseline;
+  }
+
+  &--align-stretch {
+    align-items: stretch;
+  }
+}
+
+// Paper (Card-like container)
+.paper {
+  background-color: $color-bg-paper;
+  border-radius: $radius-lg;
+  padding: $spacing-6;
+
+  &--sm {
+    padding: $spacing-4;
+  }
+
+  &--lg {
+    padding: $spacing-8;
+  }
+
+  &--elevated {
+    box-shadow: $shadow-md;
+  }
+
+  &--bordered {
+    border: 1px solid $color-border-light;
+  }
+}

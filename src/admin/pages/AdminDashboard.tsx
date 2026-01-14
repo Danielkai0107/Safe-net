@@ -1,15 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
 import BusinessIcon from "@mui/icons-material/Business";
 import PeopleIcon from "@mui/icons-material/People";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -17,8 +9,9 @@ import GroupIcon from "@mui/icons-material/Group";
 import DevicesIcon from "@mui/icons-material/Devices";
 import RouterIcon from "@mui/icons-material/Router";
 import LogoutIcon from "@mui/icons-material/Logout";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ScienceIcon from "@mui/icons-material/Science";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useAppStore } from "../../store/store";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -30,7 +23,6 @@ export const AdminDashboard: React.FC = () => {
   useEffect(() => {
     fetchTenants();
     fetchElders();
-    // Note: fetchAlerts needs tenantId, so we'll skip it for now
   }, [fetchTenants, fetchElders]);
 
   const handleSignOut = async () => {
@@ -42,150 +34,408 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
+  const userName = currentUser?.email?.split("@")[0] || "管理員";
+
   const stats = [
     {
-      title: "總社區數",
+      label: "總社區數",
       value: tenants.length,
+      change: "+2.5%",
+      trend: "up",
+      subtitle: "本月數據",
       icon: <BusinessIcon />,
-      color: "#1976d2",
-      bgColor: "#e3f2fd",
+      variant: "primary" as const,
     },
     {
-      title: "總長者數",
+      label: "總長者數",
       value: elders.length,
+      change: "+5.2%",
+      trend: "up",
+      subtitle: "本月活躍",
       icon: <PeopleIcon />,
-      color: "#2e7d32",
-      bgColor: "#e8f5e9",
+      variant: "default" as const,
     },
     {
-      title: "待處理警報",
+      label: "待處理警報",
       value: alerts.filter((a) => a.status === "pending").length,
+      change: "-0.5%",
+      trend: "up",
+      subtitle: "需要關注",
       icon: <NotificationsIcon />,
-      color: "#d32f2f",
-      bgColor: "#ffebee",
+      variant: "default" as const,
     },
   ];
 
   return (
-    <Box sx={{ bgcolor: "background.default", minHeight: "100vh", py: 4 }}>
-      <Container maxWidth="xl">
-        {/* Header */}
-        <Box mb={4}>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
-          >
-            <Box>
-              <Typography
-                variant="h4"
-                component="h1"
-                gutterBottom
-                fontWeight={600}
-              >
-                Community Guardian
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
-                守護系統管理平台
-              </Typography>
-            </Box>
-            <Box display="flex" alignItems="center" gap={2}>
-              <Tooltip title={currentUser?.email || "管理員"}>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <AccountCircleIcon color="primary" />
-                  <Typography variant="body2" color="text.secondary">
-                    {currentUser?.email?.split("@")[0]}
-                  </Typography>
-                </Box>
-              </Tooltip>
-              <Tooltip title="登出">
-                <IconButton onClick={handleSignOut} color="error">
-                  <LogoutIcon />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          </Box>
-          <Box display="flex" gap={2} mt={2} flexWrap="wrap">
-            <Button
-              component={Link}
-              to="/admin/tenants"
-              variant="contained"
-              startIcon={<BusinessIcon />}
-            >
-              社區管理
-            </Button>
-            <Button
-              component={Link}
-              to="/admin/elders"
-              variant="contained"
-              color="success"
-              startIcon={<GroupIcon />}
-            >
-              長者管理
-            </Button>
-            <Button
-              component={Link}
-              to="/admin/devices"
-              variant="contained"
-              color="info"
-              startIcon={<DevicesIcon />}
-            >
-              裝置管理
-            </Button>
-            <Button
-              component={Link}
-              to="/admin/gateways"
-              variant="contained"
-              color="warning"
-              startIcon={<RouterIcon />}
-            >
-              接收點管理
-            </Button>
-            <Button
-              component={Link}
-              to="/admin/testing"
-              variant="contained"
-              color="secondary"
-              startIcon={<ScienceIcon />}
-            >
-              測試工具
-            </Button>
-          </Box>
-        </Box>
+    <div className="admin-dashboard">
+      {/* Header Section */}
+      <div className="admin-dashboard__header">
+        <div className="admin-dashboard__greeting">
+          <div>
+            <h1 className="admin-dashboard__title">Hello, {userName}!</h1>
+            <p className="admin-dashboard__subtitle">這是本月系統運作概覽</p>
+          </div>
+          <div className="admin-dashboard__actions">
+            <IconButton onClick={handleSignOut} className="icon-btn-circle">
+              <LogoutIcon />
+            </IconButton>
+          </div>
+        </div>
 
-        {/* Stats Cards */}
-        <Grid container spacing={3}>
-          {stats.map((stat, index) => (
-            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
-              <Card elevation={2}>
-                <CardContent>
-                  <Box display="flex" alignItems="center">
-                    <Avatar
-                      sx={{
-                        bgcolor: stat.bgColor,
-                        color: stat.color,
-                        width: 56,
-                        height: 56,
-                      }}
-                    >
-                      {stat.icon}
-                    </Avatar>
-                    <Box ml={2}>
-                      <Typography variant="body2" color="text.secondary">
-                        {stat.title}
-                      </Typography>
-                      <Typography variant="h4" fontWeight={600}>
-                        {stat.value}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </Box>
+        {/* Quick Action Buttons */}
+        <div className="admin-dashboard__quick-actions">
+          <Button
+            component={Link}
+            to="/admin/tenants"
+            variant="contained"
+            startIcon={<BusinessIcon />}
+          >
+            社區管理
+          </Button>
+          <Button
+            component={Link}
+            to="/admin/elders"
+            variant="contained"
+            color="success"
+            startIcon={<GroupIcon />}
+          >
+            長者管理
+          </Button>
+          <Button
+            component={Link}
+            to="/admin/devices"
+            variant="contained"
+            color="warning"
+            startIcon={<DevicesIcon />}
+          >
+            設備管理
+          </Button>
+          <Button
+            component={Link}
+            to="/admin/gateways"
+            variant="contained"
+            color="secondary"
+            startIcon={<RouterIcon />}
+          >
+            網關管理
+          </Button>
+          <Button
+            component={Link}
+            to="/admin/testing"
+            variant="outlined"
+            startIcon={<ScienceIcon />}
+          >
+            測試工具
+          </Button>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="admin-dashboard__stats">
+        {stats.map((stat, index) => (
+          <div
+            key={index}
+            className={`admin-dashboard__stat-card ${
+              stat.variant === "primary"
+                ? "admin-dashboard__stat-card--primary"
+                : ""
+            }`}
+          >
+            <div className="admin-dashboard__stat-header">
+              <span className="admin-dashboard__stat-label">{stat.label}</span>
+            </div>
+
+            <div className="admin-dashboard__stat-value">{stat.value}</div>
+
+            <div className="admin-dashboard__stat-change">
+              <span
+                className={`admin-dashboard__change-badge admin-dashboard__change-badge--positive`}
+              >
+                <TrendingUpIcon fontSize="small" />
+                {stat.change}
+              </span>
+              <span style={{ marginLeft: "8px" }}>{stat.subtitle}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Quick Access Grid */}
+      <div className="admin-dashboard__charts">
+        <div className="admin-dashboard__chart-card">
+          <div className="admin-dashboard__chart-header">
+            <div>
+              <h2 className="admin-dashboard__chart-title">系統概覽</h2>
+              <p className="admin-dashboard__chart-subtitle">
+                快速訪問各功能模組
+              </p>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: "16px",
+              marginTop: "24px",
+            }}
+          >
+            <Link
+              to="/admin/tenants"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <div
+                className="paper paper--elevated"
+                style={{
+                  padding: "24px",
+                  cursor: "pointer",
+                  transition: "transform 0.3s ease",
+                }}
+              >
+                <BusinessIcon
+                  style={{
+                    fontSize: "32px",
+                    color: "#667eea",
+                    marginBottom: "12px",
+                  }}
+                />
+                <h3
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: 600,
+                    marginBottom: "8px",
+                  }}
+                >
+                  社區管理
+                </h3>
+                <p style={{ fontSize: "14px", color: "#6b7280" }}>
+                  管理所有社區資訊
+                </p>
+              </div>
+            </Link>
+            <Link
+              to="/admin/elders"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <div
+                className="paper paper--elevated"
+                style={{
+                  padding: "24px",
+                  cursor: "pointer",
+                  transition: "transform 0.3s ease",
+                }}
+              >
+                <GroupIcon
+                  style={{
+                    fontSize: "32px",
+                    color: "#10b981",
+                    marginBottom: "12px",
+                  }}
+                />
+                <h3
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: 600,
+                    marginBottom: "8px",
+                  }}
+                >
+                  長者管理
+                </h3>
+                <p style={{ fontSize: "14px", color: "#6b7280" }}>
+                  管理長者資料
+                </p>
+              </div>
+            </Link>
+            <Link
+              to="/admin/devices"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <div
+                className="paper paper--elevated"
+                style={{
+                  padding: "24px",
+                  cursor: "pointer",
+                  transition: "transform 0.3s ease",
+                }}
+              >
+                <DevicesIcon
+                  style={{
+                    fontSize: "32px",
+                    color: "#f59e0b",
+                    marginBottom: "12px",
+                  }}
+                />
+                <h3
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: 600,
+                    marginBottom: "8px",
+                  }}
+                >
+                  設備管理
+                </h3>
+                <p style={{ fontSize: "14px", color: "#6b7280" }}>
+                  管理物聯網設備
+                </p>
+              </div>
+            </Link>
+            <Link
+              to="/admin/gateways"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <div
+                className="paper paper--elevated"
+                style={{
+                  padding: "24px",
+                  cursor: "pointer",
+                  transition: "transform 0.3s ease",
+                }}
+              >
+                <RouterIcon
+                  style={{
+                    fontSize: "32px",
+                    color: "#f093fb",
+                    marginBottom: "12px",
+                  }}
+                />
+                <h3
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: 600,
+                    marginBottom: "8px",
+                  }}
+                >
+                  網關管理
+                </h3>
+                <p style={{ fontSize: "14px", color: "#6b7280" }}>
+                  管理網關設備
+                </p>
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        <div className="admin-dashboard__chart-card">
+          <div className="admin-dashboard__chart-header">
+            <div>
+              <h2 className="admin-dashboard__chart-title">系統統計</h2>
+              <p className="admin-dashboard__chart-subtitle">即時數據</p>
+            </div>
+          </div>
+
+          <div style={{ marginTop: "24px" }}>
+            <div style={{ marginBottom: "24px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "8px",
+                }}
+              >
+                <span style={{ fontSize: "14px", color: "#6b7280" }}>
+                  社區總數
+                </span>
+                <span style={{ fontSize: "16px", fontWeight: 600 }}>
+                  {tenants.length}
+                </span>
+              </div>
+              <div
+                style={{
+                  height: "8px",
+                  background: "#e5e7eb",
+                  borderRadius: "4px",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    height: "100%",
+                    background:
+                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    width: `${Math.min((tenants.length / 10) * 100, 100)}%`,
+                    transition: "width 0.5s ease",
+                  }}
+                ></div>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: "24px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "8px",
+                }}
+              >
+                <span style={{ fontSize: "14px", color: "#6b7280" }}>
+                  長者總數
+                </span>
+                <span style={{ fontSize: "16px", fontWeight: 600 }}>
+                  {elders.length}
+                </span>
+              </div>
+              <div
+                style={{
+                  height: "8px",
+                  background: "#e5e7eb",
+                  borderRadius: "4px",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    height: "100%",
+                    background:
+                      "linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)",
+                    width: `${Math.min((elders.length / 50) * 100, 100)}%`,
+                    transition: "width 0.5s ease",
+                  }}
+                ></div>
+              </div>
+            </div>
+
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "8px",
+                }}
+              >
+                <span style={{ fontSize: "14px", color: "#6b7280" }}>
+                  活躍警報
+                </span>
+                <span style={{ fontSize: "16px", fontWeight: 600 }}>
+                  {alerts.filter((a) => a.status === "pending").length}
+                </span>
+              </div>
+              <div
+                style={{
+                  height: "8px",
+                  background: "#e5e7eb",
+                  borderRadius: "4px",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    height: "100%",
+                    background:
+                      "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                    width: `${Math.min(
+                      (alerts.filter((a) => a.status === "pending").length /
+                        20) *
+                        100,
+                      100
+                    )}%`,
+                    transition: "width 0.5s ease",
+                  }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
