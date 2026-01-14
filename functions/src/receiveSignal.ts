@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 import { ReceiveSignalRequest, ReceiveSignalResponse, Elder } from './types';
 import { isValidMacAddress, isValidRssi } from './utils/validation';
 import { logInfo, logError } from './utils/logger';
-import { sendLineNotification } from './notifications/lineNotification';
+import { sendLineNotification, sendFirstSignalNotification } from './notifications/lineNotification';
 
 const db = admin.firestore();
 
@@ -196,6 +196,36 @@ export const receiveSignal = functions.https.onRequest(async (req, res) => {
           deviceId: elder.deviceId, 
           error: error.message 
         });
+      }
+    }
+
+    // Step 6.8: Check if this is the first signal of the day
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const todayStartISO = todayStart.toISOString();
+
+    const todaySignalsSnapshot = await db
+      .collection('logs')
+      .where('elderId', '==', elderId)
+      .where('timestamp', '>=', todayStartISO)
+      .limit(1)
+      .get();
+
+    const isFirstSignalToday = todaySignalsSnapshot.empty;
+
+    if (isFirstSignalToday) {
+      logInfo('First signal of the day detected', { 
+        elderId, 
+        elderName: elder.name,
+        time: new Date(timestamp).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' })
+      });
+      
+      // 發送當日第一筆訊號通知（僅發送通知，不創建 alert）
+      try {
+        await sendFirstSignalNotification(elder.tenantId, elderId, location);
+        logInfo('First signal notification sent', { elderId, location });
+      } catch (error: any) {
+        logError('Failed to send first signal notification', { elderId, error: error.message });
       }
     }
 

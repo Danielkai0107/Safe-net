@@ -16,6 +16,8 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import BlockIcon from '@mui/icons-material/Block';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import BatteryFullIcon from '@mui/icons-material/BatteryFull';
 import BatteryAlertIcon from '@mui/icons-material/BatteryAlert';
 import Battery20Icon from '@mui/icons-material/Battery20';
@@ -156,13 +158,39 @@ export const DeviceManagement: React.FC = () => {
     }
   };
 
+  const handleToggleStatus = async (device: Device) => {
+    if (device.status === 'assigned') {
+      alert('此裝置已配發給長者，無法停用。請先解除配發。');
+      return;
+    }
+
+    const newStatus = device.status === 'maintenance' ? 'available' : 'maintenance';
+    const action = newStatus === 'maintenance' ? '停用' : '啟用';
+
+    if (!confirm(`確定要${action}裝置「${device.deviceNumber}」嗎？`)) {
+      return;
+    }
+
+    try {
+      await updateDoc(doc(db, 'devices', device.id), {
+        status: newStatus,
+        updatedAt: new Date().toISOString(),
+      });
+      alert(`${action}成功！`);
+      fetchDevices();
+    } catch (error: any) {
+      console.error('Error:', error);
+      alert(`${action}失敗：` + error.message);
+    }
+  };
+
   const handleDelete = async (device: Device) => {
     if (device.status === 'assigned') {
       alert('此裝置已配發給長者，無法刪除。請先解除配發。');
       return;
     }
 
-    if (!confirm(`確定要刪除裝置「${device.deviceNumber}」嗎？`)) {
+    if (!confirm(`確定要刪除裝置「${device.deviceNumber}」嗎？此操作將標記為已退役。`)) {
       return;
     }
 
@@ -312,14 +340,35 @@ export const DeviceManagement: React.FC = () => {
       header: '操作',
       render: (device: Device) => (
         <Box display="flex" gap={1}>
-          <IconButton size="small" color="primary" onClick={() => handleOpenModal(device)}>
+          <IconButton 
+            size="small" 
+            color="primary" 
+            onClick={() => handleOpenModal(device)}
+            title="編輯"
+          >
             <EditIcon fontSize="small" />
           </IconButton>
+          {device.status !== 'retired' && (
+            <IconButton 
+              size="small" 
+              color={device.status === 'maintenance' ? 'success' : 'warning'}
+              onClick={() => handleToggleStatus(device)}
+              disabled={device.status === 'assigned'}
+              title={device.status === 'maintenance' ? '啟用' : '停用'}
+            >
+              {device.status === 'maintenance' ? (
+                <CheckCircleIcon fontSize="small" />
+              ) : (
+                <BlockIcon fontSize="small" />
+              )}
+            </IconButton>
+          )}
           <IconButton 
             size="small" 
             color="error" 
             onClick={() => handleDelete(device)}
-            disabled={device.status === 'assigned'}
+            disabled={device.status === 'assigned' || device.status === 'retired'}
+            title="刪除（退役）"
           >
             <DeleteIcon fontSize="small" />
           </IconButton>

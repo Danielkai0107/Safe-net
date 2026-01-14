@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-import { sendLineNotification } from '../notifications/lineNotification';
+import { sendLineNotification, sendFirstSignalNotification } from '../notifications/lineNotification';
 import { logInfo, logError } from '../utils/logger';
 import type { AlertType } from '../types';
 
@@ -44,13 +44,14 @@ export const sendTestNotification = functions.https.onRequest(
       }
 
       // Validate alert type
-      const validAlertTypes: AlertType[] = [
+      const validAlertTypes = [
         'emergency',
         'inactivity',
         'low_battery',
         'device_offline',
+        'first_signal',
       ];
-      if (!validAlertTypes.includes(alertType as AlertType)) {
+      if (!validAlertTypes.includes(alertType)) {
         res.status(400).json({
           success: false,
           error: 'INVALID_ALERT_TYPE',
@@ -62,7 +63,13 @@ export const sendTestNotification = functions.https.onRequest(
       logInfo('Sending test notification', { tenantId, elderId, alertType });
 
       // Send LINE notification
-      await sendLineNotification(tenantId, elderId, alertType as AlertType);
+      if (alertType === 'first_signal') {
+        // 發送當日首次活動通知
+        await sendFirstSignalNotification(tenantId, elderId);
+      } else {
+        // 發送一般警報通知
+        await sendLineNotification(tenantId, elderId, alertType as AlertType);
+      }
 
       logInfo('Test notification sent successfully', {
         tenantId,

@@ -35,7 +35,7 @@ export const LineNotificationTester: React.FC = () => {
   } = useAppStore();
 
   const [alertType, setAlertType] = useState<
-    "emergency" | "inactivity" | "low_battery" | "device_offline"
+    "emergency" | "inactivity" | "low_battery" | "device_offline" | "first_signal"
   >("emergency");
   const [isSending, setIsSending] = useState(false);
   const [history, setHistory] = useState<NotificationHistory[]>([]);
@@ -164,6 +164,7 @@ export const LineNotificationTester: React.FC = () => {
     inactivity: "⏱️ 長時間未活動",
     low_battery: "🔋 裝置電量不足",
     device_offline: "📵 裝置離線",
+    first_signal: "✅ 當日首次活動",
   };
 
   return (

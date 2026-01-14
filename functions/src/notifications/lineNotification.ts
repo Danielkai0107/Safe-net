@@ -95,6 +95,89 @@ export async function sendLineNotification(
 }
 
 /**
+ * Send first signal of the day notification
+ */
+export async function sendFirstSignalNotification(
+  tenantId: string,
+  elderId: string,
+  location?: string
+): Promise<void> {
+  try {
+    // Step 1: Get Tenant and Elder data
+    const tenantDoc = await db.collection('tenants').doc(tenantId).get();
+    const elderDoc = await db.collection('elders').doc(elderId).get();
+
+    if (!tenantDoc.exists || !elderDoc.exists) {
+      logError('Tenant or Elder not found', { tenantId, elderId });
+      return;
+    }
+
+    const tenant = tenantDoc.data() as Tenant;
+    const elder = elderDoc.data() as Elder;
+
+    // Step 2: Build message
+    const timestamp = new Date().toLocaleString('zh-TW', { 
+      timeZone: 'Asia/Taipei',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    
+    const message = 
+      `✅ 活動通知\n\n` +
+      `姓名：${elder.name}\n` +
+      `時間：${timestamp}\n` +
+      (location ? `地點：${location}\n` : '') +
+      `\n${elder.name} 今日首次活動訊號已收到！`;
+
+    // Step 3: Send to all users who joined the LINE OA using broadcast API
+    try {
+      await axios.post(
+        'https://api.line.me/v2/bot/message/broadcast',
+        {
+          messages: [
+            {
+              type: 'text',
+              text: message,
+            },
+            {
+              type: 'template',
+              altText: '查看詳細資訊',
+              template: {
+                type: 'buttons',
+                text: '點擊查看長者詳細資訊',
+                actions: [
+                  {
+                    type: 'uri',
+                    label: '查看詳細資訊',
+                    uri: `https://liff.line.me/${tenant.lineConfig.liffId}?liff.state=%2Felder%2F${elderId}`,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${tenant.lineConfig.channelAccessToken}`,
+          },
+        }
+      );
+
+      logInfo('LINE first signal notification sent', { tenantId, elderId });
+    } catch (error: any) {
+      logError('Failed to send LINE first signal notification', {
+        tenantId,
+        elderId,
+        error: error.response?.data || error.message,
+      });
+    }
+  } catch (error: any) {
+    logError('Error sending first signal notification', error);
+  }
+}
+
+/**
  * Build alert message based on alert type
  */
 function buildAlertMessage(elder: Elder, alertType: AlertType): string {
