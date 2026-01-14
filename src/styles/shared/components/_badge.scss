@@ -15,7 +15,6 @@
   font-weight: $font-weight-medium;
   line-height: 1;
   white-space: nowrap;
-  border: 1px solid $color-gray-200;
 
   &::before {
     content: "";
@@ -29,35 +28,35 @@
   // Variants
   &--active,
   &--online {
-    background-color: alpha-color($color-success, 0.1);
-    color: $color-success-dark;
+    background-color: $color-success-dark;
+    color: $color-white;
   }
 
   &--inactive,
   &--offline {
-    background-color: alpha-color($color-gray-500, 0.1);
-    color: $color-gray-700;
+    background-color: $color-gray-700;
+    color: $color-white;
   }
 
   &--warning {
-    background-color: alpha-color($color-warning, 0.1);
-    color: $color-warning-dark;
+    background-color: $color-warning-dark;
+    color: $color-white;
   }
 
   &--error,
   &--danger {
-    background-color: alpha-color($color-error, 0.1);
-    color: $color-error-dark;
+    background-color: $color-error-dark;
+    color: $color-white;
   }
 
   &--info {
-    background-color: alpha-color($color-info, 0.1);
-    color: $color-info-dark;
+    background-color: $color-info-dark;
+    color: $color-white;
   }
 
   &--success {
-    background-color: alpha-color($color-success, 0.1);
-    color: $color-success-dark;
+    background-color: $color-success-dark;
+    color: $color-white;
   }
 
   // Size variants

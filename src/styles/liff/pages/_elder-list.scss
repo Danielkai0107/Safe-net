@@ -1,22 +1,25 @@
-@use '../../shared/abstracts/variables' as *;
-@use '../../shared/abstracts/mixins' as *;
+@use "../../shared/abstracts/variables" as *;
+@use "../../shared/abstracts/mixins" as *;
 
 // ============================================
 // LIFF Elder List Page
 // ============================================
 
 .liff-elder-list {
-  padding: $spacing-4;
   min-height: 100vh;
-  background-color: $color-bg-muted;
+  background: $color-white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: $spacing-4;
 
   &__header {
-    @include flex-between;
-    margin-bottom: $spacing-6;
+    width: 100%;
     padding: $spacing-4;
-    background: $color-white;
-    border-radius: $radius-lg;
-    box-shadow: $shadow-sm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   &__title {
@@ -33,9 +36,17 @@
   }
 
   &__cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: $spacing-4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 24px;
+    width: 100%;
+    padding: 0px 12px 40px 12px;
+  }
+
+  .elder-card {
+    width: 100%;
   }
 
   &__empty {

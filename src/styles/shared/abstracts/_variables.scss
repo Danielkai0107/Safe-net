@@ -4,9 +4,9 @@
 
 // Color System
 // ============================================
-$color-primary: #667eea;
-$color-primary-light: #818cf8;
-$color-primary-dark: #5b21b6;
+$color-primary: #19CFD7;
+$color-primary-light: #4DD9E0;
+$color-primary-dark: #16B8BE;
 $color-primary-contrast: #ffffff;
 
 $color-secondary: #f093fb;
@@ -62,7 +62,7 @@ $color-border-medium: #d1d5db;
 $color-border-dark: #9ca3af;
 
 // Gradient Colors
-$gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$gradient-primary: linear-gradient(135deg, #19CFD7 0%, #16B8BE 100%);
 $gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 $gradient-success: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
 $gradient-background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);

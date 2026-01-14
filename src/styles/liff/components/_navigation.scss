@@ -1,0 +1,106 @@
+// ============================================
+// LIFF Navigation (AppBar & Tabs)
+// ============================================
+
+@use "../../shared/abstracts/variables" as *;
+@use "../../shared/abstracts/mixins" as *;
+
+// AppBar Header
+.liff-appbar {
+  background: $color-white;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    min-height: 56px;
+  }
+
+  &__title {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #000;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #000;
+    border-radius: 16px;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    border: 1px solid $color-border-light;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+// Navigation Tabs
+.liff-navigation {
+  background: white;
+  border-bottom: 1px solid var(--border-light);
+  position: sticky;
+  top: 56px; // AppBar height
+  z-index: 100;
+
+  &__tabs {
+    display: flex;
+    width: 100%;
+  }
+
+  &__tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 20px;
+    font-weight: 400;
+
+    // Active state
+    &--active {
+      color: var(--primary-main);
+      border-bottom-color: var(--primary-main);
+
+      .liff-navigation__icon {
+        color: var(--primary-main);
+      }
+    }
+  }
+
+  &__icon {
+    width: 20px;
+    height: 20px;
+    color: inherit;
+    transition: color 0.2s ease;
+  }
+
+  &__label {
+    font-size: 16px;
+    font-weight: 500;
+  }
+}

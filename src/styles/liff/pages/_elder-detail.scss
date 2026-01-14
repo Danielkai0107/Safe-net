@@ -1,5 +1,5 @@
-@use '../../shared/abstracts/variables' as *;
-@use '../../shared/abstracts/mixins' as *;
+@use "../../shared/abstracts/variables" as *;
+@use "../../shared/abstracts/mixins" as *;
 
 // ============================================
 // LIFF Elder Detail Page
@@ -11,22 +11,22 @@
   background-color: $color-bg-muted;
 
   &__header {
-    background: linear-gradient(135deg, $color-primary-light 0%, $color-primary 100%);
     color: $color-white;
     padding: $spacing-6;
     border-radius: $radius-lg;
-    margin-bottom: $spacing-4;
   }
 
   &__name {
     font-size: $font-size-2xl;
     font-weight: $font-weight-bold;
     margin-bottom: $spacing-2;
+    color: #000;
   }
 
   &__meta {
     font-size: $font-size-sm;
     opacity: 0.9;
+    color: #000;
   }
 
   &__sections {

@@ -1,22 +1,20 @@
-@use '../../shared/abstracts/variables' as *;
-@use '../../shared/abstracts/mixins' as *;
+@use "../../shared/abstracts/variables" as *;
+@use "../../shared/abstracts/mixins" as *;
 
 // ============================================
 // LIFF Alert List Page
 // ============================================
 
 .liff-alert-list {
-  padding: $spacing-4;
   min-height: 100vh;
-  background-color: $color-bg-muted;
+  background: $color-white;
 
   &__header {
-    @include flex-between;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: $spacing-4;
     padding: $spacing-4;
-    background: $color-white;
-    border-radius: $radius-lg;
-    box-shadow: $shadow-sm;
   }
 
   &__title {
@@ -34,14 +32,14 @@
   &__list {
     display: flex;
     flex-direction: column;
-    gap: $spacing-3;
+    gap: 24px;
+    padding: 0px 12px 40px 12px;
   }
 
   &__alert-item {
     background: $color-white;
-    padding: $spacing-4;
+    padding: $spacing-4 $spacing-6;
     border-radius: $radius-lg;
-    border-left: 4px solid $color-warning;
     box-shadow: $shadow-sm;
     cursor: pointer;
     @include transition(box-shadow, transform);
@@ -52,12 +50,44 @@
     }
 
     &--critical {
-      border-left-color: $color-error;
     }
 
     &--resolved {
-      border-left-color: $color-success;
       opacity: 0.7;
+    }
+
+    &-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      &-content {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        h3 {
+          font-size: $font-size-xl;
+          font-weight: $font-weight-bold;
+          color: $color-text-primary;
+        }
+        p {
+          font-size: $font-size-sm;
+          color: $color-text-secondary;
+        }
+      }
+    }
+
+    &-message {
+      font-size: $font-size-sm;
+      margin-bottom: 16px;
+    }
+
+    &-actions {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      gap: $spacing-2;
+      margin-top: 16px;
     }
   }
 

@@ -174,22 +174,20 @@ export const ElderList: React.FC = () => {
     <div className="liff-elder-list">
       {/* Header */}
       <div className="liff-elder-list__header">
-        <div className="flex flex-between flex--align-center">
-          <div>
-            <h1 className="liff-elder-list__title">長者列表</h1>
-            <p className="text-body-2 text-secondary mt-2">
-              共 {elders.length} 位長者
-            </p>
-          </div>
-          {isAdmin && (
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={handleOpenModal}
-            >
-              新增長者
-            </Button>
-          )}
+        {isAdmin && (
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={handleOpenModal}
+          >
+            新增長者
+          </Button>
+        )}
+        <div>
+          {/* <h1 className="liff-elder-list__title">長者列表</h1> */}
+          <p className="text-body-2 text-secondary">
+            共 {elders.length} 位長者
+          </p>
         </div>
       </div>
 
@@ -235,9 +233,7 @@ export const ElderList: React.FC = () => {
           <TextField
             label="姓名"
             value={formData.name}
-            onChange={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             required
             fullWidth
           />
@@ -362,11 +358,7 @@ export const ElderList: React.FC = () => {
             <Button onClick={handleCloseModal} disabled={isSubmitting}>
               取消
             </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={isSubmitting}
-            >
+            <Button type="submit" variant="contained" disabled={isSubmitting}>
               {isSubmitting ? "處理中..." : "確定"}
             </Button>
           </div>

@@ -1,6 +1,6 @@
-import React from 'react';
-import type { Elder } from '../types';
-import { StatusBadge } from './StatusBadge';
+import React from "react";
+import type { Elder } from "../types";
+import { StatusBadge } from "./StatusBadge";
 
 interface ElderCardProps {
   elder: Elder;
@@ -15,10 +15,10 @@ export const ElderCard: React.FC<ElderCardProps> = ({ elder, onClick }) => {
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
 
-    if (diffMins < 1) return '剛剛';
+    if (diffMins < 1) return "剛剛";
     if (diffMins < 60) return `${diffMins} 分鐘前`;
     if (diffHours < 24) return `${diffHours} 小時前`;
-    return date.toLocaleDateString('zh-TW');
+    return date.toLocaleDateString("zh-TW");
   };
 
   const handleClick = () => {
@@ -28,21 +28,26 @@ export const ElderCard: React.FC<ElderCardProps> = ({ elder, onClick }) => {
   };
 
   return (
-    <div 
-      className={`elder-card ${onClick ? 'elder-card--clickable' : ''}`}
+    <div
+      className={`elder-card ${onClick ? "elder-card--clickable" : ""}`}
       onClick={handleClick}
     >
       <div className="elder-card__header">
-        <div className="elder-card__name">{elder.name}</div>
-        {elder.age && (
-          <div className="elder-card__info">{elder.age} 歲</div>
-        )}
+        <div className="elder-card__header-content">
+          <div className="elder-card__name">{elder.name}</div>
+          {elder.age && <div className="elder-card__info">{elder.age} 歲</div>}
+        </div>
+        <div className="elder-card__header-status">
+          <StatusBadge status={elder.status} lastSeen={elder.lastSeen} />
+        </div>
       </div>
 
       <div className="elder-card__content">
         <div className="elder-card__row">
-          <span className="elder-card__label">最後出現</span>
-          <span className="elder-card__value">{formatLastSeen(elder.lastSeen)}</span>
+          <span className="elder-card__label">訊號</span>
+          <span className="elder-card__value">
+            {formatLastSeen(elder.lastSeen)}
+          </span>
         </div>
 
         {elder.address && (
@@ -51,17 +56,13 @@ export const ElderCard: React.FC<ElderCardProps> = ({ elder, onClick }) => {
             <span className="elder-card__value">{elder.address}</span>
           </div>
         )}
-
+        {/* 
         {elder.emergencyContact && (
           <div className="elder-card__row">
             <span className="elder-card__label">緊急聯絡人</span>
             <span className="elder-card__value">{elder.emergencyContact}</span>
           </div>
-        )}
-
-        <div className="elder-card__status">
-          <StatusBadge status={elder.status} lastSeen={elder.lastSeen} />
-        </div>
+        )} */}
       </div>
     </div>
   );

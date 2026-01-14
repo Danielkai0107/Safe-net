@@ -1,14 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Alert from "@mui/material/Alert";
-import Paper from "@mui/material/Paper";
 import SendIcon from "@mui/icons-material/Send";
 import { 
   Smartphone, 
@@ -196,22 +189,20 @@ export const LineNotificationTester: React.FC = () => {
   };
 
   return (
-    <Card elevation={2}>
-      <CardContent>
-        <Box display="flex" alignItems="center" gap={1} mb={1}>
+    <div className="card card--elevated">
+      <div className="card__content">
+        <div className="flex flex--align-center gap-2 mb-2">
           <Smartphone size={24} color="#1976d2" />
-          <Typography variant="h5" fontWeight={600}>
-            LINE 通知測試
-          </Typography>
-        </Box>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
+          <h2 className="h5">LINE 通知測試</h2>
+        </div>
+        <p className="text-body-2 text-secondary mb-4">
           測試發送 LINE 通知給社區內的所有用戶
-        </Typography>
+        </p>
 
-        <Grid container spacing={3} sx={{ mt: 1 }}>
+        <div className="grid grid--cols-2 grid--gap-6 mt-6">
           {/* Left Column: Form */}
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Box display="flex" flexDirection="column" gap={2}>
+          <div className="grid__col">
+            <div className="flex flex-column gap-4">
               <TextField
                 select
                 label="選擇社區 (Tenant)"
@@ -261,10 +252,10 @@ export const LineNotificationTester: React.FC = () => {
               >
                 {Object.entries(alertTypeLabels).map(([key, label]) => (
                   <MenuItem key={key} value={key}>
-                    <Box display="flex" alignItems="center">
+                    <div className="flex flex--align-center">
                       {getAlertIcon(key)}
                       {label}
-                    </Box>
+                    </div>
                   </MenuItem>
                 ))}
               </TextField>
@@ -282,120 +273,93 @@ export const LineNotificationTester: React.FC = () => {
               </Button>
 
               {responseMessage && (
-                <Alert severity={responseMessage.type}>
+                <div className={`alert alert--${responseMessage.type}`}>
                   {responseMessage.text}
-                </Alert>
+                </div>
               )}
-            </Box>
-          </Grid>
+            </div>
+          </div>
 
           {/* Right Column: Info & History */}
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Box display="flex" flexDirection="column" gap={2}>
+          <div className="grid__col">
+            <div className="flex flex-column gap-4">
               {/* Instructions */}
-              <Paper variant="outlined" sx={{ p: 2 }}>
-                <Box display="flex" alignItems="center" gap={1} mb={1}>
+              <div className="paper paper--bordered p-4">
+                <div className="flex flex--align-center gap-2 mb-3">
                   <Info size={18} color="#1976d2" />
-                  <Typography variant="subtitle2" fontWeight={600}>
-                    測試說明
-                  </Typography>
-                </Box>
-                <Box display="flex" flexDirection="column" gap={1}>
-                  <Typography variant="body2" color="text.secondary">
+                  <h3 className="h6">測試說明</h3>
+                </div>
+                <div className="flex flex-column gap-2">
+                  <p className="text-body-2 text-secondary">
                     1. 選擇要測試的社區和長者
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  </p>
+                  <p className="text-body-2 text-secondary">
                     2. 選擇警報類型
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  </p>
+                  <p className="text-body-2 text-secondary">
                     3. 點擊「發送測試通知」按鈕
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  </p>
+                  <p className="text-body-2 text-secondary">
                     4. 檢查手機 LINE 是否收到通知
-                  </Typography>
-                </Box>
+                  </p>
+                </div>
 
                 {selectedTenant && (
-                  <Box mt={2}>
-                    <Typography
-                      variant="subtitle2"
-                      gutterBottom
-                      fontWeight={600}
-                    >
-                      當前選擇：
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                  <div className="mt-4">
+                    <h4 className="h6 mb-2">當前選擇：</h4>
+                    <p className="text-body-2 text-secondary">
                       <strong>社區：</strong> {selectedTenant.name}
-                    </Typography>
+                    </p>
                     {selectedElder && (
-                      <Typography variant="body2" color="text.secondary">
+                      <p className="text-body-2 text-secondary">
                         <strong>長者：</strong> {selectedElder.name}
                         {selectedElder.age && ` (${selectedElder.age}歲)`}
-                      </Typography>
+                      </p>
                     )}
-                  </Box>
+                  </div>
                 )}
 
-                <Box mt={2}>
-                  <Alert severity="warning" sx={{ fontSize: "0.875rem" }}>
+                <div className="mt-4">
+                  <div className="alert alert--warning">
                     注意：通知會發送給所有加入該社區 LINE OA 的用戶
-                  </Alert>
-                </Box>
-              </Paper>
+                  </div>
+                </div>
+              </div>
 
               {/* History */}
-              <Paper variant="outlined" sx={{ p: 2 }}>
-                <Typography variant="subtitle2" gutterBottom fontWeight={600}>
-                  歷史發送紀錄 (最近 10 次)
-                </Typography>
+              <div className="paper paper--bordered p-4">
+                <h3 className="h6 mb-3">歷史發送紀錄 (最近 10 次)</h3>
                 {history.length === 0 ? (
-                  <Typography variant="body2" color="text.secondary">
-                    暫無紀錄
-                  </Typography>
+                  <p className="text-body-2 text-secondary">暫無紀錄</p>
                 ) : (
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={1}
-                    mt={1}
-                    maxHeight={400}
-                    overflow="auto"
-                  >
+                  <div className="flex flex-column gap-2 mt-2" style={{ maxHeight: '400px', overflow: 'auto' }}>
                     {history.map((item) => (
-                      <Alert
-                        key={item.id}
-                        severity={item.success ? "success" : "error"}
-                        sx={{ py: 0.5 }}
-                      >
-                        <Box display="flex" alignItems="center">
+                      <div key={item.id} className={`alert alert--${item.success ? "success" : "error"}`}>
+                        <div className="flex flex--align-center gap-1">
                           {item.success ? (
-                            <CheckCircle size={14} color="#2e7d32" style={{ marginRight: '4px' }} />
+                            <CheckCircle size={14} color="#2e7d32" />
                           ) : (
-                            <XCircle size={14} color="#d32f2f" style={{ marginRight: '4px' }} />
+                            <XCircle size={14} color="#d32f2f" />
                           )}
-                          <Typography variant="caption" fontWeight={600}>
+                          <span className="text-caption font-weight-600">
                             {item.elderName} - {alertTypeLabels[item.alertType as keyof typeof alertTypeLabels]}
-                          </Typography>
-                        </Box>
-                        <Typography
-                          variant="caption"
-                          display="block"
-                          color="text.secondary"
-                        >
+                          </span>
+                        </div>
+                        <p className="text-caption text-secondary mt-1">
                           {new Date(item.timestamp).toLocaleString("zh-TW")}
-                        </Typography>
-                        <Typography variant="caption" display="block">
+                        </p>
+                        <p className="text-caption mt-1">
                           {item.message}
-                        </Typography>
-                      </Alert>
+                        </p>
+                      </div>
                     ))}
-                  </Box>
+                  </div>
                 )}
-              </Paper>
-            </Box>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };

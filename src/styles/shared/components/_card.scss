@@ -1,5 +1,5 @@
-@use '../abstracts/variables' as *;
-@use '../abstracts/mixins' as *;
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
 
 // ============================================
 // Card Component
@@ -72,13 +72,41 @@
 }
 
 .elder-card__header {
-  padding: $spacing-4;
-  background: linear-gradient(135deg, $color-primary-light 0%, $color-primary 100%);
-  color: $color-white;
+  padding: $spacing-4 $spacing-6;
+  color: #000;
+  display: flex;
+  align-items: flex-start;
+
+  gap: $spacing-3;
+  padding-bottom: 0;
+}
+
+.elder-card__avatar {
+  flex-shrink: 0;
+}
+
+.elder-card__avatar-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.elder-card__header-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.elder-card__header-status {
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .elder-card__name {
-  font-size: $font-size-lg;
+  font-size: $font-size-xl;
   font-weight: $font-weight-semibold;
   margin: 0;
 }
@@ -90,7 +118,7 @@
 }
 
 .elder-card__content {
-  padding: $spacing-4;
+  padding: $spacing-2 $spacing-6;
 }
 
 .elder-card__row {
@@ -112,12 +140,6 @@
 .elder-card__value {
   font-size: $font-size-sm;
   color: $color-text-primary;
-}
-
-.elder-card__status {
-  margin-top: $spacing-3;
-  @include flex-start;
-  gap: $spacing-2;
 }
 
 .elder-card__footer {

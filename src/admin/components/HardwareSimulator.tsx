@@ -1,16 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Alert from '@mui/material/Alert';
-import Paper from '@mui/material/Paper';
 import SendIcon from '@mui/icons-material/Send';
 import { 
   Wrench, 
@@ -206,19 +199,17 @@ export const HardwareSimulator: React.FC = () => {
   };
 
   return (
-    <Card elevation={2}>
-      <CardContent>
-        <Box display="flex" alignItems="center" gap={1} mb={1}>
+    <div className="card card--elevated">
+      <div className="card__content">
+        <div className="flex flex--align-center gap-2 mb-4">
           <Wrench size={24} color="#1976d2" />
-          <Typography variant="h5" fontWeight={600}>
-            硬體訊號模擬器
-          </Typography>
-        </Box>
+          <h2 className="h5">硬體訊號模擬器</h2>
+        </div>
 
-        <Grid container spacing={3} sx={{ mt: 1 }}>
+        <div className="grid grid--cols-2 grid--gap-6 mt-6">
           {/* Left Column: Form */}
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Box display="flex" flexDirection="column" gap={2}>
+          <div className="grid__col">
+            <div className="flex flex-column gap-4">
               <TextField
                 select
                 label="選擇社區 (Tenant)"
@@ -265,28 +256,28 @@ export const HardwareSimulator: React.FC = () => {
                 fullWidth
               >
                 <MenuItem value="normal">
-                  <Box display="flex" alignItems="center" gap={1}>
+                  <div className="flex flex--align-center gap-2">
                     <Radio size={16} />
                     <span>一般訊號</span>
-                  </Box>
+                  </div>
                 </MenuItem>
                 <MenuItem value="emergency">
-                  <Box display="flex" alignItems="center" gap={1}>
+                  <div className="flex flex--align-center gap-2">
                     <AlertCircle size={16} color="#d32f2f" />
                     <span>緊急求救</span>
-                  </Box>
+                  </div>
                 </MenuItem>
                 <MenuItem value="health">
-                  <Box display="flex" alignItems="center" gap={1}>
+                  <div className="flex flex--align-center gap-2">
                     <Heart size={16} color="#d32f2f" />
                     <span>健康數據</span>
-                  </Box>
+                  </div>
                 </MenuItem>
                 <MenuItem value="other">
-                  <Box display="flex" alignItems="center" gap={1}>
+                  <div className="flex flex--align-center gap-2">
                     <FileText size={16} />
                     <span>其他訊號</span>
-                  </Box>
+                  </div>
                 </MenuItem>
               </TextField>
 
@@ -305,15 +296,15 @@ export const HardwareSimulator: React.FC = () => {
                 <MenuItem value="">請選擇接收點...</MenuItem>
                 {gateways.map((gateway) => (
                   <MenuItem key={gateway.id} value={gateway.id}>
-                    <Box display="flex" alignItems="center" gap={1}>
+                    <div className="flex flex--align-center gap-2">
                       <span>{gateway.gatewayNumber} - {gateway.location}</span>
                       {gateway.isBoundary && (
-                        <Box display="flex" alignItems="center" gap={0.5}>
+                        <div className="flex flex--align-center gap-1">
                           <AlertCircle size={14} color="#d32f2f" />
-                          <span style={{ color: '#d32f2f', fontSize: '0.875rem' }}>邊界點</span>
-                        </Box>
+                          <span className="text-caption text-error">邊界點</span>
+                        </div>
                       )}
-                    </Box>
+                    </div>
                   </MenuItem>
                 ))}
               </TextField>
@@ -350,104 +341,98 @@ export const HardwareSimulator: React.FC = () => {
               </Button>
 
               {responseMessage && (
-                <Alert severity={responseMessage.type}>
+                <div className={`alert alert--${responseMessage.type}`}>
                   {responseMessage.text}
-                </Alert>
+                </div>
               )}
-            </Box>
-          </Grid>
+            </div>
+          </div>
 
           {/* Right Column: Info & History */}
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Box display="flex" flexDirection="column" gap={2}>
+          <div className="grid__col">
+            <div className="flex flex-column gap-4">
               {/* Current Selection */}
               {(selectedTenant || selectedElder || selectedGateway) && (
-                <Paper variant="outlined" sx={{ p: 2 }}>
-                  <Typography variant="subtitle2" gutterBottom fontWeight={600}>
-                    當前選擇：
-                  </Typography>
-                  <Box display="flex" flexDirection="column" gap={0.5}>
+                <div className="paper paper--bordered p-4">
+                  <h3 className="h6 mb-3">當前選擇：</h3>
+                  <div className="flex flex-column gap-2">
                     {selectedTenant && (
-                      <Typography variant="body2" color="text.secondary">
+                      <p className="text-body-2 text-secondary">
                         <strong>社區：</strong> {selectedTenant.name}
-                      </Typography>
+                      </p>
                     )}
                     {selectedElder && (
                       <>
-                        <Typography variant="body2" color="text.secondary">
+                        <p className="text-body-2 text-secondary">
                           <strong>長者：</strong> {selectedElder.name}
                           {selectedElder.age && ` (${selectedElder.age}歲)`}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        </p>
+                        <p className="text-body-2 text-secondary">
                           <strong>MAC Address：</strong> {selectedElder.macAddress}
-                        </Typography>
+                        </p>
                       </>
                     )}
                     {selectedGateway && (
                       <>
-                        <Typography variant="body2" color="text.secondary">
+                        <p className="text-body-2 text-secondary">
                           <strong>接收點：</strong> {selectedGateway.location} ({selectedGateway.gatewayNumber})
-                        </Typography>
+                        </p>
                         {selectedGateway.isBoundary && (
-                          <Box display="flex" alignItems="center" gap={0.5}>
+                          <div className="flex flex--align-center gap-1">
                             <AlertCircle size={16} color="#ed6c02" />
-                            <Typography variant="body2" color="warning.main">
+                            <p className="text-body-2 text-warning">
                               此為邊界點，長輩經過會發送 LINE 通知
-                            </Typography>
-                          </Box>
+                            </p>
+                          </div>
                         )}
                       </>
                     )}
-                  </Box>
-                </Paper>
+                  </div>
+                </div>
               )}
 
               {/* History */}
-              <Paper variant="outlined" sx={{ p: 2 }}>
-                <Typography variant="subtitle2" gutterBottom fontWeight={600}>
-                  歷史發送紀錄 (最近 10 次)
-                </Typography>
+              <div className="paper paper--bordered p-4">
+                <h3 className="h6 mb-3">歷史發送紀錄 (最近 10 次)</h3>
                 {history.length === 0 ? (
-                  <Typography variant="body2" color="text.secondary">
-                    暫無紀錄
-                  </Typography>
+                  <p className="text-body-2 text-secondary">暫無紀錄</p>
                 ) : (
-                  <Box display="flex" flexDirection="column" gap={1} mt={1} maxHeight={400} overflow="auto">
+                  <div className="flex flex-column gap-2 mt-2" style={{ maxHeight: '400px', overflow: 'auto' }}>
                     {history.map((item) => (
-                      <Alert key={item.id} severity={item.success ? 'success' : 'error'} sx={{ py: 0.5 }}>
-                        <Box display="flex" alignItems="center" gap={0.5}>
+                      <div key={item.id} className={`alert alert--${item.success ? 'success' : 'error'}`}>
+                        <div className="flex flex--align-center gap-1">
                           {item.success ? (
                             <CheckCircle size={14} color="#2e7d32" />
                           ) : (
                             <XCircle size={14} color="#d32f2f" />
                           )}
-                          <Typography variant="caption" fontWeight={600}>
+                          <span className="text-caption font-weight-600">
                             {item.elderName} - {item.signalType}
-                          </Typography>
-                        </Box>
-                        <Typography variant="caption" display="block" color="text.secondary">
+                          </span>
+                        </div>
+                        <p className="text-caption text-secondary mt-1">
                           {new Date(item.timestamp).toLocaleString('zh-TW')}
-                        </Typography>
+                        </p>
                         {item.gatewayLocation && (
-                          <Box display="flex" alignItems="center" gap={0.5}>
+                          <div className="flex flex--align-center gap-1 mt-1">
                             <MapPin size={12} color="#757575" />
-                            <Typography variant="caption" color="text.secondary">
+                            <span className="text-caption text-secondary">
                               {item.gatewayLocation}
-                            </Typography>
-                          </Box>
+                            </span>
+                          </div>
                         )}
-                        <Typography variant="caption" display="block">
+                        <p className="text-caption mt-1">
                           {item.message}
-                        </Typography>
-                      </Alert>
+                        </p>
+                      </div>
                     ))}
-                  </Box>
+                  </div>
                 )}
-              </Paper>
-            </Box>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
