@@ -18,7 +18,7 @@ import DevicesIcon from "@mui/icons-material/Devices";
 import RouterIcon from "@mui/icons-material/Router";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { HardwareSimulator } from "../components/HardwareSimulator";
+import ScienceIcon from "@mui/icons-material/Science";
 import { useAppStore } from "../../store/store";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -142,11 +142,20 @@ export const AdminDashboard: React.FC = () => {
             >
               接收點管理
             </Button>
+            <Button
+              component={Link}
+              to="/admin/testing"
+              variant="contained"
+              color="secondary"
+              startIcon={<ScienceIcon />}
+            >
+              測試工具
+            </Button>
           </Box>
         </Box>
 
         {/* Stats Cards */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid container spacing={3}>
           {stats.map((stat, index) => (
             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
               <Card elevation={2}>
@@ -176,9 +185,6 @@ export const AdminDashboard: React.FC = () => {
             </Grid>
           ))}
         </Grid>
-
-        {/* Hardware Simulator */}
-        <HardwareSimulator />
       </Container>
     </Box>
   );

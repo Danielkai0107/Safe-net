@@ -21,6 +21,7 @@ import { TenantManagement } from './admin/pages/TenantManagement';
 import { ElderManagement } from './admin/pages/ElderManagement';
 import { DeviceManagement } from './admin/pages/DeviceManagement';
 import { GatewayManagement } from './admin/pages/GatewayManagement';
+import { TestingTools } from './admin/pages/TestingTools';
 import { LiffApp } from './liff/pages/LiffApp';
 import './index.css';
 
@@ -73,6 +74,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <GatewayManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/testing"
+            element={
+              <ProtectedRoute>
+                <TestingTools />
               </ProtectedRoute>
             }
           />
